@@ -5,28 +5,26 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { authService } from "@/api/auth";
+import { validateEmail, validatePassword } from "@/utility/validation";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/;
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
+    setErrors({});
 
-    if (!emailRegex.test(email)) {
-      setError("Please enter a valid email address");
+    if (!validateEmail(email)) {
+      setErrors({ email: "Please enter a valid email address" });
       return;
     }
 
-    if (!passwordRegex.test(password)) {
-      setError("Password must be at least 8 characters and include 1 uppercase letter, 1 number, and 1 symbol");
+    if (!validatePassword(password)) {
+      setErrors({ password: "Password must be at least 8 characters and include 1 uppercase letter, 1 number, and 1 symbol" });
       return;
     }
 
@@ -34,21 +32,14 @@ export default function Login() {
 
     try {
       await authService.login(email, password);
-      // Redirect to home or dashboard after successful login
       navigate("/");
     } catch (err) {
-      // Handle API errors
-      if (err.response?.data?.non_field_errors) {
-        setError(err.response.data.non_field_errors[0]);
-      } else if (err.response?.data?.email) {
-        setError(err.response.data.email[0]);
-      } else if (err.response?.data?.password) {
-        setError(err.response.data.password[0]);
-      } else if (err.response?.status === 400) {
-        setError("Invalid email or password");
-      } else {
-        setError("An error occurred. Please try again.");
-      }
+      const errorData = err.response?.data || {};
+      setErrors({
+        email: errorData.email?.[0],
+        password: errorData.password?.[0],
+        general: errorData.non_field_errors?.[0] || errorData.detail || "Invalid email or password"
+      });
     } finally {
       setIsLoading(false);
     }
@@ -75,6 +66,9 @@ export default function Login() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
+            {errors.email && (
+              <p className="text-sm text-destructive">{errors.email}</p>
+            )}
           </div>
           <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
@@ -86,13 +80,16 @@ export default function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
+            {errors.password && (
+              <p className="text-sm text-destructive">{errors.password}</p>
+            )}
           </div>
+          {errors.general && (
+            <p className="text-sm text-destructive text-center">{errors.general}</p>
+          )}
           <Button className="w-full h-11" size="lg" type="submit" disabled={isLoading}>
             {isLoading ? "Signing In..." : "Sign In"}
           </Button>
-          {error && (
-            <p className="text-sm text-destructive text-center">{error}</p>
-          )}
         </form>
         <p className="text-center text-sm text-muted-foreground">
           Admin and company access only
