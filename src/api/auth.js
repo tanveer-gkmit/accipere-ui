@@ -6,36 +6,48 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ;
 export const authService = {
   // Login - Get access and refresh tokens
   async login(email, password) {
-    const response = await axios.post(`${API_BASE_URL}/api/auth/token/`, {
-      email,
-      password,
-    });
-    
-    const { access, refresh } = response.data;
-    
-    // Store tokens
-    localStorage.setItem("access_token", access);
-    localStorage.setItem("refresh_token", refresh);
-    
-    return response.data;
+    try {
+      const response = await axios.post(`${API_BASE_URL}/api/auth/token/`, {
+        email,
+        password,
+      });
+      
+      const { access, refresh } = response.data;
+      
+      // Store tokens
+      localStorage.setItem("access_token", access);
+      localStorage.setItem("refresh_token", refresh);
+      
+      return response.data;
+    } catch (error) {
+      // If error.response exists, it's an API error (4xx, 5xx)
+      // If error.response is undefined, it's a network error (server down, no internet, etc.)
+      return error.response?.data || null;
+    }
   },
 
   // Refresh access token
   async refreshToken() {
-    const refreshToken = localStorage.getItem("refresh_token");
-    
-    if (!refreshToken) {
-      throw new Error("No refresh token available");
-    }
+    try {
+      const refreshToken = localStorage.getItem("refresh_token");
+      
+      if (!refreshToken) {
+        return { error: "No refresh token available" };
+      }
 
-    const response = await axios.post(`${API_BASE_URL}/api/auth/token/refresh/`, {
-      refresh: refreshToken,
-    });
-    
-    const { access } = response.data;
-    localStorage.setItem("access_token", access);
-    
-    return response.data;
+      const response = await axios.post(`${API_BASE_URL}/api/auth/token/refresh/`, {
+        refresh: refreshToken,
+      });
+      
+      const { access } = response.data;
+      localStorage.setItem("access_token", access);
+      
+      return response.data;
+    } catch (error) {
+      // If error.response exists, it's an API error (4xx, 5xx)
+      // If error.response is undefined, it's a network error (server down, no internet, etc.)
+      return error.response?.data || null;
+    }
   },
 
   // Logout - Blacklist refresh token

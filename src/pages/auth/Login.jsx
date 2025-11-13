@@ -30,19 +30,25 @@ export default function Login() {
 
     setIsLoading(true);
 
-    try {
-      await authService.login(email, password);
+    const response = await authService.login(email, password);
+    
+    // Check if login was successful (has access token)
+    if (response?.access) {
       navigate("/");
-    } catch (err) {
-      const errorData = err.response?.data || {};
+    } else {
+      // Handle error response
+      const generalError = response?.non_field_errors?.[0] 
+        || response?.detail 
+        || (response ? "Invalid email or password" : "An error occurred. Please try again.");
+      
       setErrors({
-        email: errorData.email?.[0],
-        password: errorData.password?.[0],
-        general: errorData.non_field_errors?.[0] || errorData.detail || "Invalid email or password"
+        email: response?.email?.[0],
+        password: response?.password?.[0],
+        general: generalError
       });
-    } finally {
-      setIsLoading(false);
     }
+    
+    setIsLoading(false);
   };
 
   return (

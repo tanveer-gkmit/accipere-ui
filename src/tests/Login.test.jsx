@@ -148,13 +148,8 @@ describe('Login Component', () => {
     });
 
     it('displays API error for invalid credentials', async () => {
-      authService.login.mockRejectedValueOnce({
-        response: {
-          status: 400,
-          data: {
-            non_field_errors: ['Invalid email or password.'],
-          },
-        },
+      authService.login.mockResolvedValueOnce({
+        non_field_errors: ['Invalid email or password.'],
       });
 
       renderLogin();
@@ -171,7 +166,7 @@ describe('Login Component', () => {
     });
 
     it('displays generic error for network failure', async () => {
-      authService.login.mockRejectedValueOnce(new Error('Network error'));
+      authService.login.mockResolvedValueOnce(undefined);
 
       renderLogin();
       
