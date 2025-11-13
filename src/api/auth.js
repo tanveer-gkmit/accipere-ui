@@ -27,7 +27,7 @@ export const authService = {
   },
 
   // Refresh access token
-  async refreshToken() {
+  async refreshAccessToken() {
     try {
       const refreshToken = localStorage.getItem("refresh_token");
       
