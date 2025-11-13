@@ -1,4 +1,5 @@
 import axios from "axios";
+import { authService } from "./auth";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
 
@@ -34,20 +35,14 @@ axiosInstance.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        const refreshToken = localStorage.getItem("refresh_token");
-        
-        if (!refreshToken) {
-          throw new Error("No refresh token available");
+        // Try to refresh the token using authService
+        const result = await authService.refreshAccessToken();
+
+        if (result.error) {
+          throw new Error(result.error);
         }
 
-        // Try to refresh the token
-        const response = await axios.post(
-          `${API_BASE_URL}/api/auth/token/refresh/`,
-          { refresh: refreshToken }
-        );
-
-        const { access } = response.data;
-        localStorage.setItem("access_token", access);
+        const { access } = result;
 
         // Retry the original request with new token
         originalRequest.headers.Authorization = `Bearer ${access}`;
