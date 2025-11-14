@@ -28,9 +28,6 @@ function App() {
           <Route path="/recruiter/organization" element={<Organization />} />
           <Route path="/recruiter/settings" element={<Settings />} />
           <Route path="/recruiter/settings/stage" element={<StageConfig />} />
-          
-          {/* <Route path="/register" element={<Register />} />
-          <Route path="*" element={<NotFound />} /> */}
         </Routes>
       </BrowserRouter>
       <Toaster />
