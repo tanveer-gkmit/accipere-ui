@@ -1,20 +1,19 @@
 import './App.css'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Toaster } from "@/components/ui/sonner";
 import LoginPage from "@/pages/auth/Login"
-import HelloWorld from "@/pages/HelloWorld"
-function App() {
+import Jobs from "@/pages/Index"
 
+function App() {
   return (
     <>
       <BrowserRouter>
-      <Routes>
-        {/* <Route path="/" element={<Home />} /> */}
-        <Route path="/" element={<HelloWorld />} />
-        <Route path="/login" element={<LoginPage />} />
-        {/* <Route path="/register" element={<Register />} />
-        <Route path="*" element={<NotFound />} /> */}
-      </Routes>
-    </BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Jobs />} />
+          <Route path="/login" element={<LoginPage />} />
+        </Routes>
+      </BrowserRouter>
+      <Toaster />
     </>
   )
 }
