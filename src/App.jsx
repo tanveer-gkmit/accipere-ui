@@ -11,8 +11,6 @@ function App() {
         <Routes>
           <Route path="/" element={<Jobs />} />
           <Route path="/login" element={<LoginPage />} />
-          {/* <Route path="/register" element={<Register />} />
-          <Route path="*" element={<NotFound />} /> */}
         </Routes>
       </BrowserRouter>
       <Toaster />
