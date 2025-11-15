@@ -3,34 +3,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { JobForm } from "@/components/recruiter/JobForm";
-
-// Mock data - in real app, this would come from API
-const mockJobData = {
-  "1": {
-    title: "Senior Frontend Developer",
-    department: "engineering",
-    location: "Remote",
-    type: "full-time",
-    experience: "senior",
-    salaryMin: "80000",
-    salaryMax: "120000",
-    description: "We are looking for an experienced Frontend Developer to join our team...",
-    requirements: "5+ years of experience with React, TypeScript, and modern web technologies...",
-    benefits: "Competitive salary, health insurance, remote work, flexible hours..."
-  },
-  "2": {
-    title: "Product Manager",
-    department: "product",
-    location: "New York, NY",
-    type: "full-time",
-    experience: "mid",
-    salaryMin: "90000",
-    salaryMax: "130000",
-    description: "Join our product team to drive innovation and deliver exceptional user experiences...",
-    requirements: "3+ years of product management experience, strong analytical skills...",
-    benefits: "Health insurance, 401k matching, professional development budget..."
-  }
-};
+import { mockJobData } from "@/data/MockData";
 
 export default function JobEdit() {
   const { jobId } = useParams();

@@ -1,18 +1,15 @@
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-const stages = [
-  { id: "hr-screening", label: "HR Screening" },
-  { id: "technical-screening", label: "Technical Screening" },
-  { id: "interview-1", label: "Interview 1" },
-  { id: "interview-2", label: "Interview 2" },
-  { id: "hr-interview", label: "HR Interview" },
-  { id: "offer-sent", label: "Offer Sent" },
-  { id: "joined", label: "Joined" },
-];
+import { stages } from "@/data/MockData";
 
 export default function StagePipeline({ currentStage, orientation = "horizontal", size = "md" }) {
-  const currentIndex = stages.findIndex((s) => s.id === currentStage);
+  const currentIndex = stages.findIndex((stage) => stage.id === currentStage);
+
+  const getStageStatus = (index) => ({
+    isCompleted: index < currentIndex,
+    isCurrent: index === currentIndex,
+    isPending: index > currentIndex,
+  });
 
   const dotSize = size === "sm" ? "h-8 w-8" : size === "md" ? "h-10 w-10" : "h-12 w-12";
   const lineThickness = size === "sm" ? "h-0.5" : size === "md" ? "h-1" : "h-1.5";
@@ -22,9 +19,7 @@ export default function StagePipeline({ currentStage, orientation = "horizontal"
     return (
       <div className="space-y-4">
         {stages.map((stage, index) => {
-          const isCompleted = index < currentIndex;
-          const isCurrent = index === currentIndex;
-          const isPending = index > currentIndex;
+          const { isCompleted, isCurrent, isPending } = getStageStatus(index);
 
           return (
             <div key={stage.id} className="flex items-start gap-4">
@@ -61,9 +56,7 @@ export default function StagePipeline({ currentStage, orientation = "horizontal"
   return (
     <div className="flex items-center justify-between w-full">
       {stages.map((stage, index) => {
-        const isCompleted = index < currentIndex;
-        const isCurrent = index === currentIndex;
-        const isPending = index > currentIndex;
+        const { isCompleted, isCurrent, isPending } = getStageStatus(index);
 
         return (
           <div key={stage.id} className="flex items-center flex-1">

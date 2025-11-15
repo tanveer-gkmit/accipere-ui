@@ -29,30 +29,7 @@ import {
 } from "@/components/ui/table";
 import { Plus, KeyRound, Trash2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-
-const mockUsers = [
-  {
-    id: "1",
-    email: "john.doe@company.com",
-    firstName: "John",
-    lastName: "Doe",
-    role: "Admin",
-  },
-  {
-    id: "2",
-    email: "jane.smith@company.com",
-    firstName: "Jane",
-    lastName: "Smith",
-    role: "Recruiter",
-  },
-  {
-    id: "3",
-    email: "mike.johnson@company.com",
-    firstName: "Mike",
-    lastName: "Johnson",
-    role: "Hiring Manager",
-  },
-];
+import { mockUsers } from "@/data/MockData";
 
 export default function Organization() {
   const [users, setUsers] = useState(mockUsers);

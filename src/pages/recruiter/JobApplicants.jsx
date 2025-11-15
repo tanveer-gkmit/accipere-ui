@@ -6,49 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Mail, FileText } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import ResumeViewerModal from "@/components/jobs/ResumeViewerModal";
-
-const mockCandidates = [
-  {
-    id: "1",
-    name: "Sarah Johnson",
-    email: "sarah.j@email.com",
-    jobTitle: "Senior Frontend Developer",
-    stage: "Interview 2",
-    appliedDate: "2024-01-15",
-    lastUpdated: "2024-01-22",
-    resumeUrl: "#",
-  },
-  {
-    id: "2",
-    name: "Michael Chen",
-    email: "michael.c@email.com",
-    jobTitle: "Senior Frontend Developer",
-    stage: "Interview 1",
-    appliedDate: "2024-01-18",
-    lastUpdated: "2024-01-20",
-    resumeUrl: "#",
-  },
-  {
-    id: "3",
-    name: "Emily Davis",
-    email: "emily.d@email.com",
-    jobTitle: "Senior Frontend Developer",
-    stage: "Technical Screening",
-    appliedDate: "2024-01-20",
-    lastUpdated: "2024-01-21",
-    resumeUrl: "#",
-  },
-  {
-    id: "4",
-    name: "James Wilson",
-    email: "james.w@email.com",
-    jobTitle: "Senior Frontend Developer",
-    stage: "HR Screening",
-    appliedDate: "2024-01-22",
-    lastUpdated: "2024-01-22",
-    resumeUrl: "#",
-  },
-];
+import { mockCandidates, stageColors } from "@/data/MockData";
 
 export default function JobApplicants() {
   const { jobId } = useParams();
@@ -61,15 +19,7 @@ export default function JobApplicants() {
   };
 
   const getStageColor = (stage) => {
-    const colors = {
-      "HR Screening": "bg-blue-100 text-blue-700",
-      "Technical Screening": "bg-purple-100 text-purple-700",
-      "Interview 1": "bg-yellow-100 text-yellow-700",
-      "Interview 2": "bg-orange-100 text-orange-700",
-      "HR Interview": "bg-pink-100 text-pink-700",
-      "Offer Sent": "bg-green-100 text-green-700",
-    };
-    return colors[stage] || "bg-gray-100 text-gray-700";
+    return stageColors[stage] || "bg-gray-100 text-gray-700";
   };
 
   return (

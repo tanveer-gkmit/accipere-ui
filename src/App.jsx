@@ -3,7 +3,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Toaster } from "@/components/ui/sonner";
 import LoginPage from "@/pages/auth/Login"
 import Jobs from "@/pages/Index"
-
 import JobOpeningList from "@/pages/recruiter/JobOpeningList"
 import JobCreate from "@/pages/recruiter/JobCreate"
 import JobEdit from "@/pages/recruiter/JobEdit"
