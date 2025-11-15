@@ -4,64 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Plus, Users, Eye } from "lucide-react";
 import { Link } from "react-router-dom";
-
-const jobOpenings = [
-  {
-    id: "1",
-    title: "Senior Frontend Developer",
-    department: "Engineering",
-    location: "Remote",
-    type: "Full-time",
-    posted: "2024-01-15",
-    status: "active",
-    applicants: 24,
-    inPipeline: 18,
-  },
-  {
-    id: "2",
-    title: "Product Manager",
-    department: "Product",
-    location: "New York, NY",
-    type: "Full-time",
-    posted: "2024-01-20",
-    status: "active",
-    applicants: 32,
-    inPipeline: 15,
-  },
-  {
-    id: "3",
-    title: "UX Designer",
-    department: "Design",
-    location: "San Francisco, CA",
-    type: "Full-time",
-    posted: "2024-01-18",
-    status: "active",
-    applicants: 28,
-    inPipeline: 12,
-  },
-  {
-    id: "4",
-    title: "Full Stack Developer",
-    department: "Engineering",
-    location: "Remote",
-    type: "Contract",
-    posted: "2024-01-10",
-    status: "active",
-    applicants: 45,
-    inPipeline: 22,
-  },
-  {
-    id: "5",
-    title: "DevOps Engineer",
-    department: "Engineering",
-    location: "Austin, TX",
-    type: "Full-time",
-    posted: "2024-01-08",
-    status: "paused",
-    applicants: 19,
-    inPipeline: 8,
-  },
-];
+import { jobOpenings } from "@/data/MockData";
 
 export default function JobOpeningList() {
   return (
