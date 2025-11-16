@@ -1,11 +1,11 @@
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
+import { DashboardLayout } from "@/components/layout/dashboard-layout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Plus, Users, Eye } from "lucide-react";
 import { Link } from "react-router-dom";
-import { jobOpenings } from "@/data/MockData";
 import { formatDate } from "@/utility/date-utils";
+import { jobOpenings } from "@/data/mock-data";
 
 export default function JobOpeningList() {
   return (

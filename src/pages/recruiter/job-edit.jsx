@@ -1,9 +1,9 @@
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
+import { DashboardLayout } from "@/components/layout/dashboard-layout";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { Link, useParams, useNavigate } from "react-router-dom";
-import { JobForm } from "@/components/recruiter/JobForm";
-import { mockJobData } from "@/data/MockData";
+import { JobForm } from "@/components/recruiter/job-form";
+import { mockJobData } from "@/data/mock-data";
 
 export default function JobEdit() {
   const { jobId } = useParams();

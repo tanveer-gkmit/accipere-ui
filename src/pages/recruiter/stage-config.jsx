@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
+import { DashboardLayout } from "@/components/layout/dashboard-layout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Plus, Trash2, Edit2, Save, MoveUp, MoveDown } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { defaultStages } from "@/data/MockData";
+import { defaultStages } from "@/data/mock-data";
 
 export default function StageConfig() {
   const [stages, setStages] = useState(defaultStages);

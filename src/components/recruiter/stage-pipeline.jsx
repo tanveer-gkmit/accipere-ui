@@ -1,6 +1,6 @@
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { stages } from "@/data/MockData";
+import { stages } from "@/data/mock-data";
 
 export default function StagePipeline({ currentStage, orientation = "horizontal", size = "md" }) {
   const currentIndex = stages.findIndex(({ id }) => id === currentStage);
