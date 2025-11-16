@@ -1,16 +1,16 @@
-import './App.css'
+import './app.css'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Toaster } from "@/components/ui/sonner";
-import LoginPage from "@/pages/auth/Login"
-import Jobs from "@/pages/Index"
-import JobOpeningList from "@/pages/recruiter/JobOpeningList"
-import JobCreate from "@/pages/recruiter/JobCreate"
-import JobEdit from "@/pages/recruiter/JobEdit"
-import JobApplicants from "@/pages/recruiter/JobApplicants"
-import ApplicantDetail from "@/pages/recruiter/ApplicantDetail"
-import Organization from "@/pages/recruiter/Organization"
-import Settings from "@/pages/recruiter/Settings"
-import StageConfig from "@/pages/recruiter/StageConfig"
+import LoginPage from "@/pages/auth/login"
+import Jobs from "@/pages/index"
+import JobOpeningList from "@/pages/recruiter/job-opening-list"
+import JobCreate from "@/pages/recruiter/job-create"
+import JobEdit from "@/pages/recruiter/job-edit"
+import JobApplicants from "@/pages/recruiter/job-applicants"
+import ApplicantDetail from "@/pages/recruiter/applicant-detail"
+import Organization from "@/pages/recruiter/organization"
+import Settings from "@/pages/recruiter/settings"
+import StageConfig from "@/pages/recruiter/stage-config"
 function App() {
   return (
     <>

@@ -1,8 +1,8 @@
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
+import { DashboardLayout } from "@/components/layout/dashboard-layout";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import { JobForm } from "@/components/recruiter/JobForm";
+import { JobForm } from "@/components/recruiter/job-form";
 
 export default function JobCreate() {
   const navigate = useNavigate();

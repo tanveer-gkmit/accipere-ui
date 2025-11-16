@@ -1,8 +1,8 @@
 import { useState } from "react";
-import JobCard from "@/components/jobs/JobCard";
-import JobDetailModal from "@/components/jobs/JobDetailModal";
-import ApplyFormModal from "@/components/jobs/ApplyFormModal";
-import { mockJobs } from "@/data/MockData";
+import JobCard from "@/components/jobs/job-card";
+import JobDetailModal from "@/components/jobs/job-detail-modal";
+import ApplyFormModal from "@/components/jobs/apply-form-modal";
+import { mockJobs } from "@/data/mock-data";
 
 export default function Jobs() {
   const [selectedJob, setSelectedJob] = useState(null);
