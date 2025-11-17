@@ -60,12 +60,10 @@ function App() {
                 </ProtectedRoute>
               } 
             />
-            
-            {/* All authenticated users can view applicants */}
             <Route 
               path="/dashboard/jobs/:jobId/applicants" 
               element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoles={['Administrator', 'Recruiter']}>
                   <JobApplicants />
                 </ProtectedRoute>
               } 
@@ -73,7 +71,7 @@ function App() {
             <Route 
               path="/dashboard/applicants/:applicantId" 
               element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoles={['Administrator', 'Recruiter']}>
                   <ApplicantDetail />
                 </ProtectedRoute>
               } 
@@ -88,12 +86,10 @@ function App() {
                 </ProtectedRoute>
               } 
             />
-            
-            {/* Administrator & Recruiter */}
             <Route 
               path="/dashboard/settings" 
               element={
-                <ProtectedRoute allowedRoles={['Administrator', 'Recruiter']}>
+                <ProtectedRoute allowedRoles={['Administrator']}>
                   <Settings />
                 </ProtectedRoute>
               } 
@@ -101,7 +97,7 @@ function App() {
             <Route 
               path="/dashboard/settings/stage" 
               element={
-                <ProtectedRoute allowedRoles={['Administrator', 'Recruiter']}>
+                <ProtectedRoute allowedRoles={['Administrator']}>
                   <StageConfig />
                 </ProtectedRoute>
               } 
