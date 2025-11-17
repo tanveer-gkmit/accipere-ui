@@ -1,52 +1,56 @@
 import FormSection from "./form-section";
 import FormField from "./form-field";
 
-export default function ProfessionalDetailsSection({ formData, setFormData }) {
+export default function ProfessionalDetailsSection({ formData, setFormData, errors = {} }) {
   return (
     <FormSection title="Professional Details">
       <div className="grid md:grid-cols-2 gap-4">
         <FormField
-          id="totalExperience"
-          label="Total Experience"
-          value={formData.totalExperience}
+          id="total_experience"
+          label="Total Experience (years)"
+          type="number"
+          value={formData.total_experience}
           onChange={(e) =>
-            setFormData({ ...formData, totalExperience: e.target.value })
+            setFormData({ ...formData, total_experience: e.target.value })
           }
-          placeholder="e.g., 5 years"
+          placeholder="e.g., 5"
         />
         <FormField
-          id="relevantExperience"
-          label="Relevant Experience"
-          value={formData.relevantExperience}
+          id="relevant_experience"
+          label="Relevant Experience (years)"
+          type="number"
+          value={formData.relevant_experience}
           onChange={(e) =>
-            setFormData({ ...formData, relevantExperience: e.target.value })
+            setFormData({ ...formData, relevant_experience: e.target.value })
           }
-          placeholder="e.g., 3 years"
+          placeholder="e.g., 3"
         />
         <FormField
-          id="currentCTC"
+          id="current_ctc"
           label="Current CTC"
-          value={formData.currentCTC}
+          type="number"
+          value={formData.current_ctc}
           onChange={(e) =>
-            setFormData({ ...formData, currentCTC: e.target.value })
+            setFormData({ ...formData, current_ctc: e.target.value })
           }
           placeholder="₹"
         />
         <FormField
-          id="expectedCTC"
+          id="expected_ctc"
           label="Expected CTC"
-          value={formData.expectedCTC}
+          type="number"
+          value={formData.expected_ctc}
           onChange={(e) =>
-            setFormData({ ...formData, expectedCTC: e.target.value })
+            setFormData({ ...formData, expected_ctc: e.target.value })
           }
           placeholder="₹"
         />
         <FormField
-          id="noticePeriod"
+          id="notice_period"
           label="Notice Period"
-          value={formData.noticePeriod}
+          value={formData.notice_period}
           onChange={(e) =>
-            setFormData({ ...formData, noticePeriod: e.target.value })
+            setFormData({ ...formData, notice_period: e.target.value })
           }
           placeholder="e.g., 30 days"
         />

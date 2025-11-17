@@ -43,17 +43,24 @@ export default function JobDetailModal({ job, isOpen, onClose, onApply }) {
               </div>
             </div>
 
-            <div className="flex items-start gap-4 p-4 rounded-lg bg-muted/30">
-              <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                <IndianRupee className="h-6 w-6 text-primary" />
+            {(job.salary_min || job.salary_max) && (
+              <div className="flex items-start gap-4 p-4 rounded-lg bg-muted/30">
+                <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                  <IndianRupee className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground mb-1">Salary Range</p>
+                  <p className="font-semibold text-foreground text-base">
+                    {job.salary_min && job.salary_max 
+                      ? `₹${job.salary_min} - ₹${job.salary_max}`
+                      : job.salary_min 
+                        ? `₹${job.salary_min}+`
+                        : `Up to ₹${job.salary_max}`
+                    }
+                  </p>
+                </div>
               </div>
-              <div>
-                <p className="text-sm text-muted-foreground mb-1">Salary Range</p>
-                <p className="font-semibold text-foreground text-base">
-                  ₹{job.salary_min}L - ₹{job.salary_max}L
-                </p>
-              </div>
-            </div>
+            )}
 
             <div className="flex items-start gap-4 p-4 rounded-lg bg-muted/30">
               <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
@@ -90,12 +97,14 @@ export default function JobDetailModal({ job, isOpen, onClose, onApply }) {
             <div className="text-foreground leading-relaxed whitespace-pre-line">{job.requirements}</div>
           </div>
 
-          <div className="border-t pt-6">
-            <h3 className="text-xl font-semibold text-foreground mb-4">
-              Benefits & Perks
-            </h3>
-            <div className="text-foreground leading-relaxed whitespace-pre-line">{job.benefits || 'No benefits information provided.'}</div>
-          </div>
+          {job.benefits && (
+            <div className="border-t pt-6">
+              <h3 className="text-xl font-semibold text-foreground mb-4">
+                Benefits & Perks
+              </h3>
+              <div className="text-foreground leading-relaxed whitespace-pre-line">{job.benefits}</div>
+            </div>
+          )}
 
           <div className="flex gap-3 pt-6 border-t">
             <Button className="flex-1" onClick={onApply}>
