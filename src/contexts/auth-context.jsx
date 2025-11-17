@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import axiosInstance from '@/api/axios';
+import { ROLES } from '@/constants/roles';
 
 const AuthContext = createContext(null);
 
@@ -25,9 +26,9 @@ export const AuthProvider = ({ children }) => {
   const value = {
     user,
     loading,
-    isAdmin: user?.role === 'Administrator',
-    isRecruiter: user?.role === 'Recruiter',
-    isEvaluator: user?.role === 'Technical Evaluator',
+    isAdmin: user?.role === ROLES.ADMINISTRATOR,
+    isRecruiter: user?.role === ROLES.RECRUITER,
+    isEvaluator: user?.role === ROLES.TECHNICAL_EVALUATOR,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

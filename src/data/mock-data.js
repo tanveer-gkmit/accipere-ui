@@ -1,4 +1,5 @@
 // Centralized mock data for the application
+import { ROLES } from '@/constants/roles';
 
 export const stages = [
   { id: "hr-screening", label: "HR Screening", value: "hr-screening" },
@@ -273,16 +274,16 @@ export const mockUsers = [
   {
     id: "1",
     email: "john.doe@company.com",
-    first_name: "John",
-    last_name: "Doe",
-    role: "Administrator",
+    firstName: "John",
+    lastName: "Doe",
+    role: ROLES.ADMINISTRATOR,
   },
   {
     id: "2",
     email: "jane.smith@company.com",
-    first_name: "Jane",
-    last_name: "Smith",
-    role: "Recruiter",
+    firstName: "Jane",
+    lastName: "Smith",
+    role: ROLES.RECRUITER,
   },
   {
     id: "3",

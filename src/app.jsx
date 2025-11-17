@@ -4,6 +4,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/contexts/auth-context";
 import { ProtectedRoute } from "@/middleware/protected-route";
 import { PublicRoute } from "@/middleware/public-route";
+import { ROLE_GROUPS } from "@/constants/roles";
 import LoginPage from "@/pages/auth/login"
 import Jobs from "@/pages/index"
 import JobOpeningList from "@/pages/dashboard/job-opening-list"
@@ -39,7 +40,7 @@ function App() {
             <Route 
               path="/dashboard/jobs" 
               element={
-                <ProtectedRoute allowedRoles={['Administrator', 'Recruiter']}>
+                <ProtectedRoute allowedRoles={ROLE_GROUPS.DASHBOARD_ACCESS}>
                   <JobOpeningList />
                 </ProtectedRoute>
               } 
@@ -47,7 +48,7 @@ function App() {
             <Route 
               path="/dashboard/jobs/new" 
               element={
-                <ProtectedRoute allowedRoles={['Administrator', 'Recruiter']}>
+                <ProtectedRoute allowedRoles={ROLE_GROUPS.DASHBOARD_ACCESS}>
                   <JobCreate />
                 </ProtectedRoute>
               } 
@@ -55,7 +56,7 @@ function App() {
             <Route 
               path="/dashboard/jobs/:jobId/edit" 
               element={
-                <ProtectedRoute allowedRoles={['Administrator', 'Recruiter']}>
+                <ProtectedRoute allowedRoles={ROLE_GROUPS.DASHBOARD_ACCESS}>
                   <JobEdit />
                 </ProtectedRoute>
               } 
@@ -63,7 +64,7 @@ function App() {
             <Route 
               path="/dashboard/jobs/:jobId/applicants" 
               element={
-                <ProtectedRoute allowedRoles={['Administrator', 'Recruiter']}>
+                <ProtectedRoute allowedRoles={ROLE_GROUPS.DASHBOARD_ACCESS}>
                   <JobApplicants />
                 </ProtectedRoute>
               } 
@@ -71,7 +72,7 @@ function App() {
             <Route 
               path="/dashboard/applicants/:applicantId" 
               element={
-                <ProtectedRoute allowedRoles={['Administrator', 'Recruiter']}>
+                <ProtectedRoute allowedRoles={ROLE_GROUPS.DASHBOARD_ACCESS}>
                   <ApplicantDetail />
                 </ProtectedRoute>
               } 
@@ -81,7 +82,7 @@ function App() {
             <Route 
               path="/dashboard/organization" 
               element={
-                <ProtectedRoute allowedRoles={['Administrator']}>
+                <ProtectedRoute allowedRoles={ROLE_GROUPS.ADMIN_ONLY}>
                   <Organization />
                 </ProtectedRoute>
               } 
@@ -89,7 +90,7 @@ function App() {
             <Route 
               path="/dashboard/settings" 
               element={
-                <ProtectedRoute allowedRoles={['Administrator']}>
+                <ProtectedRoute allowedRoles={ROLE_GROUPS.ADMIN_ONLY}>
                   <Settings />
                 </ProtectedRoute>
               } 
@@ -97,7 +98,7 @@ function App() {
             <Route 
               path="/dashboard/settings/stage" 
               element={
-                <ProtectedRoute allowedRoles={['Administrator']}>
+                <ProtectedRoute allowedRoles={ROLE_GROUPS.ADMIN_ONLY}>
                   <StageConfig />
                 </ProtectedRoute>
               } 
