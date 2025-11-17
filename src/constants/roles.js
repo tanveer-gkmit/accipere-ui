@@ -1,0 +1,17 @@
+export const USER_ROLES = {
+  ADMINISTRATOR: "Administrator",
+  RECRUITER: "Recruiter",
+  TECHNICAL_EVALUATOR: "Technical Evaluator",
+};
+
+export const ROLE_OPTIONS = [
+  { value: USER_ROLES.ADMINISTRATOR, label: USER_ROLES.ADMINISTRATOR },
+  { value: USER_ROLES.RECRUITER, label: USER_ROLES.RECRUITER },
+  { value: USER_ROLES.TECHNICAL_EVALUATOR, label: USER_ROLES.TECHNICAL_EVALUATOR },
+];
+
+export const ROLE_BADGE_VARIANTS = {
+  [USER_ROLES.ADMINISTRATOR]: "default",
+  [USER_ROLES.RECRUITER]: "secondary",
+  [USER_ROLES.TECHNICAL_EVALUATOR]: "outline",
+};
