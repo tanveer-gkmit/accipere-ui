@@ -5,13 +5,13 @@ export const USER_ROLES = {
 };
 
 export const ROLE_OPTIONS = [
-  { value: "Administrator", label: "Administrator" },
-  { value: "Recruiter", label: "Recruiter" },
-  { value: "Technical Evaluator", label: "Technical Evaluator" },
+  { value: USER_ROLES.ADMINISTRATOR, label: USER_ROLES.ADMINISTRATOR },
+  { value: USER_ROLES.RECRUITER, label: USER_ROLES.RECRUITER },
+  { value: USER_ROLES.TECHNICAL_EVALUATOR, label: USER_ROLES.TECHNICAL_EVALUATOR },
 ];
 
 export const ROLE_BADGE_VARIANTS = {
-  "Administrator": "default",
-  "Recruiter": "secondary",
-  "Technical Evaluator": "outline",
+  [USER_ROLES.ADMINISTRATOR]: "default",
+  [USER_ROLES.RECRUITER]: "secondary",
+  [USER_ROLES.TECHNICAL_EVALUATOR]: "outline",
 };
