@@ -29,15 +29,40 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
 import { mockApplicant, mockTimeline, stages } from "@/data/MockData";
+import { formatDate, formatDateTime } from "@/utility/date-utils";
 
 export default function ApplicantDetail() {
   const { applicantId } = useParams();
-  const [currentStage, setCurrentStage] = useState(mockApplicant.stage);
+  const { toast } = useToast();
+  
+  const {
+    first_name,
+    last_name,
+    email,
+    phone,
+    city,
+    state,
+    zip_code,
+    street,
+    current_job_title,
+    job_title,
+    applied_date,
+    stage,
+    total_experience,
+    relevant_experience,
+    current_ctc,
+    expected_ctc,
+    notice_period,
+    skill_set,
+    linkedin,
+    github
+  } = mockApplicant;
+  
+  const [currentStage, setCurrentStage] = useState(stage);
   const [note, setNote] = useState("");
   const [pendingStage, setPendingStage] = useState(null);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [isResumeViewerOpen, setIsResumeViewerOpen] = useState(false);
-  const { toast } = useToast();
 
   const handleStageChangeRequest = (newStage) => {
     if (newStage !== currentStage) {
@@ -52,7 +77,7 @@ export default function ApplicantDetail() {
       const stageName = stages.find((s) => s.value === pendingStage)?.label;
       toast({
         title: "Stage Updated",
-        description: `${mockApplicant.first_name} ${mockApplicant.last_name} moved to ${stageName}${note ? ' with notes' : ''}`,
+        description: `${first_name} ${last_name} moved to ${stageName}${note ? ' with notes' : ''}`,
       });
       // Here you would save the note along with the stage change to the backend
       // The note will be stored in APPLICATION_ASSIGNED_USER_STATUSES.notes
@@ -67,8 +92,6 @@ export default function ApplicantDetail() {
     setShowConfirmDialog(false);
   };
 
-
-
   return (
     <DashboardLayout userRole="recruiter">
       <div className="space-y-6 max-w-6xl">
@@ -80,7 +103,7 @@ export default function ApplicantDetail() {
           </Button>
           <div className="flex-1">
             <h1 className="text-3xl font-bold text-foreground">Applicant Details</h1>
-            <p className="text-muted-foreground mt-1">{mockApplicant.jobTitle}</p>
+            <p className="text-muted-foreground mt-1">{job_title}</p>
           </div>
         </div>
 
@@ -88,34 +111,34 @@ export default function ApplicantDetail() {
           <div className="flex items-start gap-6">
             <Avatar className="h-24 w-24">
               <AvatarFallback className="text-2xl">
-                {mockApplicant.first_name[0]}{mockApplicant.last_name[0]}
+                {first_name[0]}{last_name[0]}
               </AvatarFallback>
             </Avatar>
 
             <div className="flex-1 space-y-4">
               <div>
                 <h2 className="text-2xl font-bold text-foreground">
-                  {mockApplicant.first_name} {mockApplicant.last_name}
+                  {first_name} {last_name}
                 </h2>
-                <p className="text-muted-foreground">{mockApplicant.current_job_title}</p>
+                <p className="text-muted-foreground">{current_job_title}</p>
               </div>
 
               <div className="grid md:grid-cols-2 gap-3 text-sm">
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <Mail className="h-4 w-4" />
-                  <span>{mockApplicant.email}</span>
+                  <span>{email}</span>
                 </div>
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <Phone className="h-4 w-4" />
-                  <span>{mockApplicant.phone}</span>
+                  <span>{phone}</span>
                 </div>
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <MapPin className="h-4 w-4" />
-                  <span>{mockApplicant.city}, {mockApplicant.state} {mockApplicant.zip_code}</span>
+                  <span>{city}, {state} {zip_code}</span>
                 </div>
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <Calendar className="h-4 w-4" />
-                  <span>Applied {new Date(mockApplicant.applied_date).toLocaleDateString()}</span>
+                  <span>Applied {formatDate(applied_date)}</span>
                 </div>
               </div>
 
@@ -125,7 +148,7 @@ export default function ApplicantDetail() {
                   View Resume
                 </Button>
                 <Button variant="outline" asChild>
-                  <a href="/resume.pdf" download={`${mockApplicant.first_name}_${mockApplicant.last_name}_Resume.pdf`}>
+                  <a href="/resume.pdf" download={`${first_name}_${last_name}_Resume.pdf`}>
                     <Download className="h-4 w-4 mr-2" />
                     Download Resume
                   </a>
@@ -191,7 +214,7 @@ export default function ApplicantDetail() {
             <AlertDialogHeader>
               <AlertDialogTitle>Confirm Stage Change</AlertDialogTitle>
               <AlertDialogDescription>
-                Are you sure you want to move {mockApplicant.name} from{" "}
+                Are you sure you want to move {first_name} {last_name} from{" "}
                 <span className="font-semibold">
                   {stages.find((s) => s.value === currentStage)?.label}
                 </span>{" "}
@@ -216,47 +239,47 @@ export default function ApplicantDetail() {
             <div className="space-y-3">
               <div>
                 <p className="text-sm text-muted-foreground">Total Experience</p>
-                <p className="text-foreground font-medium">{mockApplicant.total_experience || "N/A"}</p>
+                <p className="text-foreground font-medium">{total_experience || "N/A"}</p>
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Relevant Experience</p>
-                <p className="text-foreground font-medium">{mockApplicant.relevant_experience || "N/A"}</p>
+                <p className="text-foreground font-medium">{relevant_experience || "N/A"}</p>
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Current CTC</p>
-                <p className="text-foreground font-medium">{mockApplicant.current_ctc || "N/A"}</p>
+                <p className="text-foreground font-medium">{current_ctc || "N/A"}</p>
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Expected CTC</p>
-                <p className="text-foreground font-medium">{mockApplicant.expected_ctc || "N/A"}</p>
+                <p className="text-foreground font-medium">{expected_ctc || "N/A"}</p>
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Notice Period</p>
-                <p className="text-foreground font-medium">{mockApplicant.notice_period || "N/A"}</p>
+                <p className="text-foreground font-medium">{notice_period || "N/A"}</p>
               </div>
             </div>
 
             <h3 className="text-lg font-semibold text-foreground mt-6 mb-3">Skills</h3>
             <div className="flex flex-wrap gap-2">
-              {mockApplicant.skill_set ? mockApplicant.skill_set.split(",").map((skill) => (
+              {skill_set ? skill_set.split(",").map((skill) => (
                 <Badge key={skill.trim()} variant="secondary">
                   {skill.trim()}
                 </Badge>
               )) : <p className="text-sm text-muted-foreground">No skills listed</p>}
             </div>
 
-            {(mockApplicant.linkedin || mockApplicant.github) && (
+            {(linkedin || github) && (
               <>
                 <h3 className="text-lg font-semibold text-foreground mt-6 mb-3">Links</h3>
                 <div className="space-y-2">
-                  {mockApplicant.linkedin && (
-                    <a href={mockApplicant.linkedin} target="_blank" rel="noopener noreferrer" 
+                  {linkedin && (
+                    <a href={linkedin} target="_blank" rel="noopener noreferrer" 
                        className="text-sm text-primary hover:underline block">
                       LinkedIn Profile →
                     </a>
                   )}
-                  {mockApplicant.github && (
-                    <a href={mockApplicant.github} target="_blank" rel="noopener noreferrer"
+                  {github && (
+                    <a href={github} target="_blank" rel="noopener noreferrer"
                        className="text-sm text-primary hover:underline block">
                       GitHub Profile →
                     </a>
@@ -288,7 +311,7 @@ export default function ApplicantDetail() {
                       </p>
                     )}
                     <p className="text-xs text-muted-foreground mt-1">
-                      {new Date(event.status_date).toLocaleDateString()} at {new Date(event.status_date).toLocaleTimeString()}
+                      {formatDateTime(event.status_date)}
                     </p>
                   </div>
                 </div>
@@ -300,9 +323,9 @@ export default function ApplicantDetail() {
         <Card className="p-6">
           <h3 className="text-lg font-semibold text-foreground mb-4">Address</h3>
           <div className="space-y-2">
-            {mockApplicant.street && <p className="text-foreground">{mockApplicant.street}</p>}
+            {street && <p className="text-foreground">{street}</p>}
             <p className="text-foreground">
-              {mockApplicant.city}, {mockApplicant.state} {mockApplicant.zip_code}
+              {city}, {state} {zip_code}
             </p>
           </div>
         </Card>
@@ -311,7 +334,7 @@ export default function ApplicantDetail() {
           isOpen={isResumeViewerOpen}
           onClose={() => setIsResumeViewerOpen(false)}
           resumeUrl="/resume.pdf"
-          candidateName={`${mockApplicant.first_name} ${mockApplicant.last_name}`}
+          candidateName={`${first_name} ${last_name}`}
         />
       </div>
     </DashboardLayout>

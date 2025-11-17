@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Plus, Users, Eye } from "lucide-react";
 import { Link } from "react-router-dom";
 import { jobOpenings } from "@/data/MockData";
+import { formatDate } from "@/utility/date-utils";
 
 export default function JobOpeningList() {
   return (
@@ -25,52 +26,55 @@ export default function JobOpeningList() {
 
         {/* Job List */}
         <div className="space-y-4">
-          {jobOpenings.map((job) => (
-            <Card key={job.id} className="p-6 hover:shadow-lg transition-all duration-200">
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex-1">
-                  <div className="flex items-start justify-between mb-3">
-                    <div>
-                      <h3 className="text-xl font-semibold text-foreground">{job.title}</h3>
-                      <div className="flex flex-wrap gap-2 mt-2">
-                        <Badge variant="outline">{job.department}</Badge>
-                        <Badge variant="outline">{job.location}</Badge>
-                        <Badge variant="outline">{job.type}</Badge>
-                        <Badge className={job.status === "active" ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"}>
-                          {job.status.charAt(0).toUpperCase() + job.status.slice(1)}
-                        </Badge>
+          {jobOpenings.map((job) => {
+            const { id, title, department, location, type, status, applicants, in_pipeline, posted } = job;
+            return (
+              <Card key={id} className="p-6 hover:shadow-lg transition-all duration-200">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1">
+                    <div className="flex items-start justify-between mb-3">
+                      <div>
+                        <h3 className="text-xl font-semibold text-foreground">{title}</h3>
+                        <div className="flex flex-wrap gap-2 mt-2">
+                          <Badge variant="outline">{department}</Badge>
+                          <Badge variant="outline">{location}</Badge>
+                          <Badge variant="outline">{type}</Badge>
+                          <Badge className={status === "active" ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"}>
+                            {status.charAt(0).toUpperCase() + status.slice(1)}
+                          </Badge>
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  <div className="flex items-center gap-6 text-sm text-muted-foreground">
-                    <div className="flex items-center gap-1">
-                      <Users className="h-4 w-4" />
-                      <span>{job.applicants} applicants</span>
+                    <div className="flex items-center gap-6 text-sm text-muted-foreground">
+                      <div className="flex items-center gap-1">
+                        <Users className="h-4 w-4" />
+                        <span>{applicants} applicants</span>
+                      </div>
+                      <span>•</span>
+                      <span>{in_pipeline} in pipeline</span>
+                      <span>•</span>
+                      <span>Posted {formatDate(posted)}</span>
                     </div>
-                    <span>•</span>
-                    <span>{job.inPipeline} in pipeline</span>
-                    <span>•</span>
-                    <span>Posted {new Date(job.posted).toLocaleDateString()}</span>
+                  </div>
+
+                  <div className="flex gap-2">
+                    <Button variant="default" asChild>
+                      <Link to={`/recruiter/jobs/${id}/applicants`}>
+                        <Eye className="h-4 w-4 mr-2" />
+                        View Applicants
+                      </Link>
+                    </Button>
+                    <Button variant="outline" asChild>
+                      <Link to={`/recruiter/jobs/${id}/edit`}>
+                        Edit
+                      </Link>
+                    </Button>
                   </div>
                 </div>
-
-                <div className="flex gap-2">
-                  <Button variant="default" asChild>
-                    <Link to={`/recruiter/jobs/${job.id}/applicants`}>
-                      <Eye className="h-4 w-4 mr-2" />
-                      View Applicants
-                    </Link>
-                  </Button>
-                  <Button variant="outline" asChild>
-                    <Link to={`/recruiter/jobs/${job.id}/edit`}>
-                      Edit
-                    </Link>
-                  </Button>
-                </div>
-              </div>
-            </Card>
-          ))}
+              </Card>
+            );
+          })}
         </div>
       </div>
     </DashboardLayout>

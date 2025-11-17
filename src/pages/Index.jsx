@@ -10,7 +10,7 @@ export default function Jobs() {
   const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
 
   const handleViewDetails = (jobId) => {
-    const job = mockJobs.find((j) => j.id === jobId);
+    const job = mockJobs.find(({ id }) => id === jobId);
     if (job) {
       setSelectedJob(job);
       setIsDetailModalOpen(true);
@@ -56,13 +56,16 @@ export default function Jobs() {
           </div>
 
           <div className="grid md:grid-cols-2 gap-6">
-            {mockJobs.map((job) => (
-              <JobCard
-                key={job.id}
-                job={job}
-                onViewDetails={handleViewDetails}
-              />
-            ))}
+            {mockJobs.map((job) => {
+              const { id } = job;
+              return (
+                <JobCard
+                  key={id}
+                  job={job}
+                  onViewDetails={handleViewDetails}
+                />
+              );
+            })}
           </div>
         </div>
       </section>

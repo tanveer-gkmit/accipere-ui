@@ -30,6 +30,7 @@ import {
 import { Plus, KeyRound, Trash2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { mockUsers } from "@/data/MockData";
+import { USER_ROLES, ROLE_OPTIONS, ROLE_BADGE_VARIANTS } from "@/constants/roles";
 
 export default function Organization() {
   const [users, setUsers] = useState(mockUsers);
@@ -45,7 +46,7 @@ export default function Organization() {
     setIsAddDialogOpen(false);
     toast({
       title: "User Added",
-      description: `${userData.firstName} ${userData.lastName} has been added to the organization.`,
+      description: `${userData.first_name} ${userData.last_name} has been added to the organization.`,
     });
   };
 
@@ -65,16 +66,7 @@ export default function Organization() {
   };
 
   const getRoleBadgeVariant = (role) => {
-    switch (role) {
-      case "Admin":
-        return "default";
-      case "Recruiter":
-        return "secondary";
-      case "Hiring Manager":
-        return "outline";
-      default:
-        return "secondary";
-    }
+    return ROLE_BADGE_VARIANTS[role] || "secondary";
   };
 
   return (
@@ -124,38 +116,41 @@ export default function Organization() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {users.map((user) => (
-                <TableRow key={user.id}>
-                  <TableCell className="font-medium">
-                    {user.firstName} {user.lastName}
-                  </TableCell>
-                  <TableCell>{user.email}</TableCell>
-                  <TableCell>
-                    <Badge variant={getRoleBadgeVariant(user.role)}>
-                      {user.role}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex justify-end gap-2">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleResetPassword(user)}
-                      >
-                        <KeyRound className="h-4 w-4 mr-1" />
-                        Reset Password
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleDeleteUser(user.id)}
-                      >
-                        <Trash2 className="h-4 w-4 text-destructive" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {users.map((user) => {
+                const { id, first_name, last_name, email, role } = user;
+                return (
+                  <TableRow key={id}>
+                    <TableCell className="font-medium">
+                      {first_name} {last_name}
+                    </TableCell>
+                    <TableCell>{email}</TableCell>
+                    <TableCell>
+                      <Badge variant={getRoleBadgeVariant(role)}>
+                        {role}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex justify-end gap-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleResetPassword(user)}
+                        >
+                          <KeyRound className="h-4 w-4 mr-1" />
+                          Reset Password
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleDeleteUser(id)}
+                        >
+                          <Trash2 className="h-4 w-4 text-destructive" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         </Card>
@@ -167,9 +162,9 @@ export default function Organization() {
 function AddUserForm({ onSubmit }) {
   const [formData, setFormData] = useState({
     email: "",
-    firstName: "",
-    lastName: "",
-    role: "Recruiter",
+    first_name: "",
+    last_name: "",
+    role: USER_ROLES.RECRUITER,
   });
 
   const handleSubmit = (e) => {
@@ -177,9 +172,9 @@ function AddUserForm({ onSubmit }) {
     onSubmit(formData);
     setFormData({
       email: "",
-      firstName: "",
-      lastName: "",
-      role: "Recruiter",
+      first_name: "",
+      last_name: "",
+      role: USER_ROLES.RECRUITER,
     });
   };
 
@@ -191,9 +186,9 @@ function AddUserForm({ onSubmit }) {
           <Input
             id="firstName"
             required
-            value={formData.firstName}
+            value={formData.first_name}
             onChange={(e) =>
-              setFormData({ ...formData, firstName: e.target.value })
+              setFormData({ ...formData, first_name: e.target.value })
             }
             placeholder="John"
           />
@@ -203,9 +198,9 @@ function AddUserForm({ onSubmit }) {
           <Input
             id="lastName"
             required
-            value={formData.lastName}
+            value={formData.last_name}
             onChange={(e) =>
-              setFormData({ ...formData, lastName: e.target.value })
+              setFormData({ ...formData, last_name: e.target.value })
             }
             placeholder="Doe"
           />
@@ -236,10 +231,14 @@ function AddUserForm({ onSubmit }) {
             <SelectValue placeholder="Select a role" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="Admin">Admin</SelectItem>
-            <SelectItem value="Recruiter">Recruiter</SelectItem>
-            <SelectItem value="Hiring Manager">Hiring Manager</SelectItem>
-            <SelectItem value="Viewer">Viewer</SelectItem>
+            {ROLE_OPTIONS.map((role) => {
+              const { value, label } = role;
+              return (
+                <SelectItem key={value} value={value}>
+                  {label}
+                </SelectItem>
+              );
+            })}
           </SelectContent>
         </Select>
       </div>
