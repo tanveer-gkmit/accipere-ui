@@ -16,7 +16,7 @@ export default function JobOpeningList() {
             <p className="text-muted-foreground mt-1">Manage all your job postings</p>
           </div>
           <Button asChild>
-            <Link to="/recruiter/jobs/new">
+            <Link to="/dashboard/jobs/new">
               <Plus className="h-4 w-4 mr-2" />
               Post New Job
             </Link>
@@ -57,13 +57,13 @@ export default function JobOpeningList() {
 
                 <div className="flex gap-2">
                   <Button variant="default" asChild>
-                    <Link to={`/recruiter/jobs/${job.id}/applicants`}>
+                    <Link to={`/dashboard/jobs/${job.id}/applicants`}>
                       <Eye className="h-4 w-4 mr-2" />
                       View Applicants
                     </Link>
                   </Button>
                   <Button variant="outline" asChild>
-                    <Link to={`/recruiter/jobs/${job.id}/edit`}>
+                    <Link to={`/dashboard/jobs/${job.id}/edit`}>
                       Edit
                     </Link>
                   </Button>

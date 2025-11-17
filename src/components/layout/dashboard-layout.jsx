@@ -9,9 +9,9 @@ import {
 import { Button } from "@/components/ui/button";
 
 const navigation = [
-  { name: "Jobs", href: "/recruiter/jobs", icon: Briefcase },
-  { name: "Organization", href: "/recruiter/organization", icon: Building2 },
-  { name: "Settings", href: "/recruiter/settings", icon: Settings },
+  { name: "Jobs", href: "/dashboard/jobs", icon: Briefcase },
+  { name: "Organization", href: "/dashboard/organization", icon: Building2 },
+  { name: "Settings", href: "/dashboard/settings", icon: Settings },
 ];
 
 export function DashboardLayout({ children, userRole = "recruiter" }) {

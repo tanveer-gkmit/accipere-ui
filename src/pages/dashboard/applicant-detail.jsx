@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Mail, Phone, MapPin, Calendar, FileText, ArrowLeft, Download } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
-import StagePipeline from "@/components/recruiter/stage-pipeline";
+import StagePipeline from "@/components/dashboard/stage-pipeline";
 import ResumeViewerModal from "@/components/jobs/resume-viewer-modal";
 import {
   Select,
@@ -74,7 +74,7 @@ export default function ApplicantDetail() {
       <div className="space-y-6 max-w-6xl">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" asChild>
-            <Link to="/recruiter/jobs/1/applicants">
+            <Link to="/dashboard/jobs/1/applicants">
               <ArrowLeft className="h-5 w-5" />
             </Link>
           </Button>

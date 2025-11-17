@@ -1,33 +1,113 @@
 import './app.css'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Toaster } from "@/components/ui/sonner";
+import { AuthProvider } from "@/contexts/auth-context";
+import { ProtectedRoute } from "@/middleware/protected-route";
+import { PublicRoute } from "@/middleware/public-route";
 import LoginPage from "@/pages/auth/login"
 import Jobs from "@/pages/index"
-import JobOpeningList from "@/pages/recruiter/job-opening-list"
-import JobCreate from "@/pages/recruiter/job-create"
-import JobEdit from "@/pages/recruiter/job-edit"
-import JobApplicants from "@/pages/recruiter/job-applicants"
-import ApplicantDetail from "@/pages/recruiter/applicant-detail"
-import Organization from "@/pages/recruiter/organization"
-import Settings from "@/pages/recruiter/settings"
-import StageConfig from "@/pages/recruiter/stage-config"
+import JobOpeningList from "@/pages/dashboard/job-opening-list"
+import JobCreate from "@/pages/dashboard/job-create"
+import JobEdit from "@/pages/dashboard/job-edit"
+import JobApplicants from "@/pages/dashboard/job-applicants"
+import ApplicantDetail from "@/pages/dashboard/applicant-detail"
+import Organization from "@/pages/dashboard/organization"
+import Settings from "@/pages/dashboard/settings"
+import StageConfig from "@/pages/dashboard/stage-config"
+import UnauthorizedPage from "@/pages/unauthorized"
+
 function App() {
   return (
     <>
       <BrowserRouter>
-        <Routes>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path='/' element={<Jobs/>} />
-          {/* Recruiter Routes */}
-          <Route path="/recruiter/jobs" element={<JobOpeningList />} />
-          <Route path="/recruiter/jobs/new" element={<JobCreate />} />
-          <Route path="/recruiter/jobs/:jobId/edit" element={<JobEdit />} />
-          <Route path="/recruiter/jobs/:jobId/applicants" element={<JobApplicants />} />
-          <Route path="/recruiter/applicants/:applicantId" element={<ApplicantDetail />} />
-          <Route path="/recruiter/organization" element={<Organization />} />
-          <Route path="/recruiter/settings" element={<Settings />} />
-          <Route path="/recruiter/settings/stage" element={<StageConfig />} />
-        </Routes>
+        <AuthProvider>
+          <Routes>
+            <Route 
+              path="/login" 
+              element={
+                <PublicRoute>
+                  <LoginPage />
+                </PublicRoute>
+              } 
+            />
+            <Route path="/unauthorized" element={<UnauthorizedPage />} />
+            
+            {/* Public route - accessible by anyone */}
+            <Route path='/' element={<Jobs/>} />
+            
+            {/* Dashboard Routes - Administrator & Recruiter */}
+            <Route 
+              path="/dashboard/jobs" 
+              element={
+                <ProtectedRoute allowedRoles={['Administrator', 'Recruiter']}>
+                  <JobOpeningList />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/dashboard/jobs/new" 
+              element={
+                <ProtectedRoute allowedRoles={['Administrator', 'Recruiter']}>
+                  <JobCreate />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/dashboard/jobs/:jobId/edit" 
+              element={
+                <ProtectedRoute allowedRoles={['Administrator', 'Recruiter']}>
+                  <JobEdit />
+                </ProtectedRoute>
+              } 
+            />
+            
+            {/* All authenticated users can view applicants */}
+            <Route 
+              path="/dashboard/jobs/:jobId/applicants" 
+              element={
+                <ProtectedRoute>
+                  <JobApplicants />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/dashboard/applicants/:applicantId" 
+              element={
+                <ProtectedRoute>
+                  <ApplicantDetail />
+                </ProtectedRoute>
+              } 
+            />
+            
+            {/* Administrator only */}
+            <Route 
+              path="/dashboard/organization" 
+              element={
+                <ProtectedRoute allowedRoles={['Administrator']}>
+                  <Organization />
+                </ProtectedRoute>
+              } 
+            />
+            
+            {/* Administrator & Recruiter */}
+            <Route 
+              path="/dashboard/settings" 
+              element={
+                <ProtectedRoute allowedRoles={['Administrator', 'Recruiter']}>
+                  <Settings />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/dashboard/settings/stage" 
+              element={
+                <ProtectedRoute allowedRoles={['Administrator', 'Recruiter']}>
+                  <StageConfig />
+                </ProtectedRoute>
+              } 
+            />
+          </Routes>
+        </AuthProvider>
       </BrowserRouter>
       <Toaster />
     </>

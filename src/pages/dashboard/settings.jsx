@@ -25,7 +25,7 @@ export default function Settings() {
                   Customize your recruitment stage configuration, add or remove steps, and configure the hiring pipeline to match your organization's process.
                 </p>
                 <Button asChild>
-                  <Link to="/recruiter/settings/stage">
+                  <Link to="/dashboard/settings/stage">
                     Configure Stage
                     <ArrowRight className="h-4 w-4 ml-2" />
                   </Link>
