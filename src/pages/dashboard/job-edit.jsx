@@ -37,7 +37,7 @@ export default function JobEdit() {
       setSubmitting(true);
       setError(null);
 
-      // Prepare job data according to API requirements
+      // Prepare job data with required fields
       const jobUpdateData = {
         title: formData.title,
         description: formData.description,
@@ -47,18 +47,10 @@ export default function JobEdit() {
         experience_level: formData.experience_level,
         requirements: formData.requirements,
         status: formData.status,
+        ...(formData.salary_min && { salary_min: parseInt(formData.salary_min) }),
+        ...(formData.salary_max && { salary_max: parseInt(formData.salary_max) }),
+        ...(formData.benefits && { benefits: formData.benefits }),
       };
-
-      // Add optional fields only if they have values
-      if (formData.salary_min) {
-        jobUpdateData.salary_min = parseInt(formData.salary_min);
-      }
-      if (formData.salary_max) {
-        jobUpdateData.salary_max = parseInt(formData.salary_max);
-      }
-      if (formData.benefits) {
-        jobUpdateData.benefits = formData.benefits;
-      }
 
       // Update the job
       await axiosInstance.patch(`/api/jobs/${jobId}/`, jobUpdateData);

@@ -16,7 +16,7 @@ export default function JobCreate() {
       setLoading(true);
       setError(null);
 
-      // Prepare job data according to API requirements
+      // Prepare job data with required fields
       const jobData = {
         title: formData.title,
         description: formData.description,
@@ -26,18 +26,10 @@ export default function JobCreate() {
         experience_level: formData.experience_level,
         requirements: formData.requirements,
         status: formData.status,
+        ...(formData.salary_min && { salary_min: parseInt(formData.salary_min) }),
+        ...(formData.salary_max && { salary_max: parseInt(formData.salary_max) }),
+        ...(formData.benefits && { benefits: formData.benefits }),
       };
-
-      // Add optional fields only if they have values
-      if (formData.salary_min) {
-        jobData.salary_min = parseInt(formData.salary_min);
-      }
-      if (formData.salary_max) {
-        jobData.salary_max = parseInt(formData.salary_max);
-      }
-      if (formData.benefits) {
-        jobData.benefits = formData.benefits;
-      }
 
       // Create the job
       await axiosInstance.post("/api/jobs/", jobData);
