@@ -50,7 +50,7 @@ export default function JobOpeningList() {
     }
   };
   return (
-    <DashboardLayout userRole="recruiter">
+    <DashboardLayout>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
@@ -89,12 +89,12 @@ export default function JobOpeningList() {
                         </Badge>
                       </div>
                     </div>
-                    <div className="flex items-center gap-6 text-sm text-muted-foreground">
-                      <span>Posted {formatDate(job.created_at)}</span>
-                    </div>
                   </div>
-
-                  <div className="flex gap-2">
+                  <div className="flex items-center gap-6 text-sm text-muted-foreground">
+                    <span>Posted {formatDate(job.created_at)}</span>
+                  </div>
+                </div>
+                <div className="flex gap-2">
                   <Button variant="default" asChild>
                     <Link to={`/dashboard/jobs/${job.id}/applicants`}>
                       <Eye className="h-4 w-4 mr-2" />
@@ -126,7 +126,6 @@ export default function JobOpeningList() {
                   </RoleGuard>
                 </div>
               </div>
-            </div>
             </Card>
           ))}
         </div>

@@ -79,7 +79,7 @@ export default function JobEdit() {
 
   if (loading) {
     return (
-      <DashboardLayout userRole="recruiter">
+      <DashboardLayout>
         <div className="max-w-4xl space-y-6">
           <p className="text-center text-muted-foreground">Loading job details...</p>
         </div>
@@ -89,7 +89,7 @@ export default function JobEdit() {
 
   if (error && !jobData) {
     return (
-      <DashboardLayout userRole="recruiter">
+      <DashboardLayout>
         <div className="max-w-4xl space-y-6">
           <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
             {error}
@@ -101,7 +101,7 @@ export default function JobEdit() {
   }
 
   return (
-    <DashboardLayout userRole="recruiter">
+    <DashboardLayout>
       <div className="max-w-4xl space-y-6">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" asChild>

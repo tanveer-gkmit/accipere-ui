@@ -14,7 +14,7 @@ const navigation = [
   { name: "Settings", href: "/dashboard/settings", icon: Settings },
 ];
 
-export function DashboardLayout({ children, userRole = "recruiter" }) {
+export function DashboardLayout({ children }) {
   const location = useLocation();
 
   return (
