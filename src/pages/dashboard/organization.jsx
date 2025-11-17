@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/table";
 import { Plus, KeyRound, Trash2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { USER_ROLES, ROLE_OPTIONS, ROLE_BADGE_VARIANTS } from "@/constants/roles";
+import { USER_ROLES, ROLE_BADGE_VARIANTS } from "@/constants/roles";
 
 const initialFormData = {
   email: "",
@@ -228,14 +228,11 @@ function AddUserForm({ onSubmit }) {
             <SelectValue placeholder="Select a role" />
           </SelectTrigger>
           <SelectContent>
-            {ROLE_OPTIONS.map((role) => {
-              const { value, label } = role;
-              return (
-                <SelectItem key={value} value={value}>
-                  {label}
-                </SelectItem>
-              );
-            })}
+            {Object.entries(USER_ROLES).map(([key, value]) => (
+              <SelectItem key={value} value={value}>
+                {value}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>
