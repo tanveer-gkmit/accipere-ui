@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
+import { DashboardLayout } from "@/components/layout/dashboard-layout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -8,8 +8,8 @@ import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Mail, Phone, MapPin, Calendar, FileText, ArrowLeft, Download } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
-import StagePipeline from "@/components/recruiter/StagePipeline";
-import ResumeViewerModal from "@/components/jobs/ResumeViewerModal";
+import StagePipeline from "@/components/recruiter/stage-pipeline";
+import ResumeViewerModal from "@/components/jobs/resume-viewer-modal";
 import {
   Select,
   SelectContent,
@@ -28,7 +28,8 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
-import { mockApplicant, mockTimeline, stages } from "@/data/MockData";
+
+import { mockApplicant, mockTimeline, stages } from "@/data/mock-data";
 import { formatDate, formatDateTime } from "@/utility/date-utils";
 
 export default function ApplicantDetail() {

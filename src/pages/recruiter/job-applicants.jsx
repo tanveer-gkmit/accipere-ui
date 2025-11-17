@@ -1,13 +1,13 @@
 import { useState } from "react";
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
+import { DashboardLayout } from "@/components/layout/dashboard-layout";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Mail, FileText } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
-import ResumeViewerModal from "@/components/jobs/ResumeViewerModal";
-import { mockCandidates, stageColors } from "@/data/MockData";
 import { formatDate } from "@/utility/date-utils";
+import ResumeViewerModal from "@/components/jobs/resume-viewer-modal";
+import { mockCandidates, stageColors } from "@/data/mock-data";
 
 export default function JobApplicants() {
   const { jobId } = useParams();

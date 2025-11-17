@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
+import { DashboardLayout } from "@/components/layout/dashboard-layout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -29,7 +29,6 @@ import {
 } from "@/components/ui/table";
 import { Plus, KeyRound, Trash2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { mockUsers } from "@/data/MockData";
 import { USER_ROLES, ROLE_OPTIONS, ROLE_BADGE_VARIANTS } from "@/constants/roles";
 
 const initialFormData = {
@@ -38,6 +37,7 @@ const initialFormData = {
   last_name: "",
   role: USER_ROLES.RECRUITER,
 };
+import { mockUsers } from "@/data/mock-data";
 
 export default function Organization() {
   const [users, setUsers] = useState(mockUsers);

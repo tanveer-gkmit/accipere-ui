@@ -1,5 +1,5 @@
-import FormSection from "./FormSection";
-import FormField from "./FormField";
+import FormSection from "./form-section";
+import FormField from "./form-field";
 
 export default function SocialLinksSection({ formData, setFormData }) {
   return (

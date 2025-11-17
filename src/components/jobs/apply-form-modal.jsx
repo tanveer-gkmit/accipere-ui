@@ -7,13 +7,13 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import BasicInfoSection from "./form/BasicInfoSection";
-import ProfessionalDetailsSection from "./form/ProfessionalDetailsSection";
-import AddressSection from "./form/AddressSection";
-import SocialLinksSection from "./form/SocialLinksSection";
-import AdditionalDetailsSection from "./form/AdditionalDetailsSection";
-import FormSection from "./form/FormSection";
-import FileUploadField from "./form/FileUploadField";
+import BasicInfoSection from "./form/basic-info-section";
+import ProfessionalDetailsSection from "./form/professional-details-section";
+import AddressSection from "./form/address-section";
+import SocialLinksSection from "./form/social-links-section";
+import AdditionalDetailsSection from "./form/additional-details-section";
+import FormSection from "./form/form-section";
+import FileUploadField from "./form/file-upload-field";
 
 export default function ApplyFormModal({ jobTitle, isOpen, onClose }) {
   const [formData, setFormData] = useState({

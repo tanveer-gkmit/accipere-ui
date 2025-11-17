@@ -1,6 +1,6 @@
-import FormSection from "./FormSection";
-import FormField from "./FormField";
-import TextAreaField from "./TextAreaField";
+import FormSection from "./form-section";
+import FormField from "./form-field";
+import TextAreaField from "./text-area-field";
 
 export default function AdditionalDetailsSection({ formData, setFormData }) {
   return (
