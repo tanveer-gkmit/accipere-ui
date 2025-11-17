@@ -40,20 +40,8 @@ function MyComponent() {
 }
 ```
 
-### Check permissions
-```jsx
-import { usePermissions } from '@/hooks/use-permissions';
-
-function MyComponent() {
-  const { canManageJobs } = usePermissions();
-  
-  return canManageJobs && <button>Create Job</button>;
-}
-```
-
 ## Files
 - `auth-context.jsx` - Gets user from `/auth/me`
 - `protected-route.jsx` - Blocks unauthenticated users
 - `public-route.jsx` - Redirects logged-in users away from login
 - `role-guard.jsx` - Hides UI based on role
-- `use-permissions.js` - Permission checks
