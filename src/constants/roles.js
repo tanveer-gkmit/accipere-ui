@@ -1,0 +1,12 @@
+
+export const ROLES = {
+  ADMINISTRATOR: 'Administrator',
+  RECRUITER: 'Recruiter',
+  TECHNICAL_EVALUATOR: 'Technical Evaluator',
+};
+
+
+export const ROLE_GROUPS = {
+  DASHBOARD_ACCESS: [ROLES.ADMINISTRATOR, ROLES.RECRUITER],
+  ADMIN_ONLY: [ROLES.ADMINISTRATOR],
+};
