@@ -32,6 +32,13 @@ import { useToast } from "@/hooks/use-toast";
 import { mockUsers } from "@/data/MockData";
 import { USER_ROLES, ROLE_OPTIONS, ROLE_BADGE_VARIANTS } from "@/constants/roles";
 
+const initialFormData = {
+  email: "",
+  first_name: "",
+  last_name: "",
+  role: USER_ROLES.RECRUITER,
+};
+
 export default function Organization() {
   const [users, setUsers] = useState(mockUsers);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
@@ -160,22 +167,12 @@ export default function Organization() {
 }
 
 function AddUserForm({ onSubmit }) {
-  const [formData, setFormData] = useState({
-    email: "",
-    first_name: "",
-    last_name: "",
-    role: USER_ROLES.RECRUITER,
-  });
+  const [formData, setFormData] = useState(initialFormData);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit(formData);
-    setFormData({
-      email: "",
-      first_name: "",
-      last_name: "",
-      role: USER_ROLES.RECRUITER,
-    });
+    setFormData(initialFormData);
   };
 
   return (
