@@ -10,11 +10,12 @@ export function formatDate(date) {
 }
 
 export function formatDateTime(date) {
-  if (!date) return "N/A";
+  const formattedDate = formatDate(date);
+  if (formattedDate === "N/A") return "N/A";
+  
   try {
     const parsedDate = new Date(date);
-    if (isNaN(parsedDate.getTime())) return "N/A";
-    return `${parsedDate.toLocaleDateString()} at ${parsedDate.toLocaleTimeString()}`;
+    return `${formattedDate} at ${parsedDate.toLocaleTimeString()}`;
   } catch {
     return "N/A";
   }
