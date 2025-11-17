@@ -64,7 +64,6 @@ export default function ApplicantDetail() {
   const [pendingStage, setPendingStage] = useState(null);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [isResumeViewerOpen, setIsResumeViewerOpen] = useState(false);
-  const { toast } = useToast();
 
   const handleStageChangeRequest = (newStage) => {
     if (newStage !== currentStage) {
