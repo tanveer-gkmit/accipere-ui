@@ -4,18 +4,37 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useState } from "react";
 
 export function JobForm({ 
   initialData = {}, 
   isEditMode = false,
   onSubmit,
-  onCancel 
+  onCancel,
+  loading = false
 }) {
+  const [formData, setFormData] = useState({
+    title: initialData.title || "",
+    department: initialData.department || "",
+    location: initialData.location || "",
+    employment_type: initialData.employment_type || "",
+    experience_level: initialData.experience_level || "",
+    salary_min: initialData.salary_min || "",
+    salary_max: initialData.salary_max || "",
+    description: initialData.description || "",
+    requirements: initialData.requirements || "",
+    benefits: initialData.benefits || "",
+    status: initialData.status || "Open",
+  });
+
+  const handleChange = (field, value) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission
     if (onSubmit) {
-      onSubmit(e);
+      onSubmit(formData);
     }
   };
 
@@ -29,36 +48,36 @@ export function JobForm({
             <Label htmlFor="title">Job Title *</Label>
             <Input
               id="title"
-              defaultValue={initialData.title || ""}
+              value={formData.title}
+              onChange={(e) => handleChange("title", e.target.value)}
               placeholder="e.g., Senior Frontend Developer"
               className="h-11"
+              required
             />
           </div>
 
           <div className="grid md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="department">Department *</Label>
-              <Select defaultValue={initialData.department || ""}>
-                <SelectTrigger className="h-11">
-                  <SelectValue placeholder="Select department" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="engineering">Engineering</SelectItem>
-                  <SelectItem value="product">Product</SelectItem>
-                  <SelectItem value="design">Design</SelectItem>
-                  <SelectItem value="marketing">Marketing</SelectItem>
-                  <SelectItem value="sales">Sales</SelectItem>
-                </SelectContent>
-              </Select>
+              <Input
+                id="department"
+                value={formData.department}
+                onChange={(e) => handleChange("department", e.target.value)}
+                placeholder="e.g., Engineering, Marketing, Sales"
+                className="h-11"
+                required
+              />
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="location">Location *</Label>
               <Input
                 id="location"
-                defaultValue={initialData.location || ""}
+                value={formData.location}
+                onChange={(e) => handleChange("location", e.target.value)}
                 placeholder="e.g., San Francisco, CA or Remote"
                 className="h-11"
+                required
               />
             </div>
           </div>
@@ -66,30 +85,30 @@ export function JobForm({
           <div className="grid md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="type">Employment Type *</Label>
-              <Select defaultValue={initialData.type || ""}>
+              <Select value={formData.employment_type} onValueChange={(value) => handleChange("employment_type", value)} required>
                 <SelectTrigger className="h-11">
                   <SelectValue placeholder="Select type" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="full-time">Full-time</SelectItem>
-                  <SelectItem value="part-time">Part-time</SelectItem>
-                  <SelectItem value="contract">Contract</SelectItem>
-                  <SelectItem value="internship">Internship</SelectItem>
+                  <SelectItem value="Full-time">Full-time</SelectItem>
+                  <SelectItem value="Part-time">Part-time</SelectItem>
+                  <SelectItem value="Contract">Contract</SelectItem>
+                  <SelectItem value="Internship">Internship</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="experience">Experience Level *</Label>
-              <Select defaultValue={initialData.experience || ""}>
+              <Select value={formData.experience_level} onValueChange={(value) => handleChange("experience_level", value)} required>
                 <SelectTrigger className="h-11">
                   <SelectValue placeholder="Select level" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="entry">Entry Level</SelectItem>
-                  <SelectItem value="mid">Mid Level</SelectItem>
-                  <SelectItem value="senior">Senior</SelectItem>
-                  <SelectItem value="lead">Lead</SelectItem>
+                  <SelectItem value="Entry">Entry Level</SelectItem>
+                  <SelectItem value="Mid">Mid Level</SelectItem>
+                  <SelectItem value="Senior">Senior</SelectItem>
+                  <SelectItem value="Lead">Lead</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -101,7 +120,8 @@ export function JobForm({
               <Input
                 id="salaryMin"
                 type="number"
-                defaultValue={initialData.salaryMin || ""}
+                value={formData.salary_min}
+                onChange={(e) => handleChange("salary_min", e.target.value)}
                 placeholder="50000"
                 className="h-11"
               />
@@ -112,11 +132,25 @@ export function JobForm({
               <Input
                 id="salaryMax"
                 type="number"
-                defaultValue={initialData.salaryMax || ""}
+                value={formData.salary_max}
+                onChange={(e) => handleChange("salary_max", e.target.value)}
                 placeholder="80000"
                 className="h-11"
               />
             </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="status">Status *</Label>
+            <Select value={formData.status} onValueChange={(value) => handleChange("status", value)} required>
+              <SelectTrigger className="h-11">
+                <SelectValue placeholder="Select status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Open">Open</SelectItem>
+                <SelectItem value="Closed">Closed</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
 
@@ -127,9 +161,11 @@ export function JobForm({
             <Label htmlFor="description">Job Description *</Label>
             <Textarea
               id="description"
-              defaultValue={initialData.description || ""}
+              value={formData.description}
+              onChange={(e) => handleChange("description", e.target.value)}
               placeholder="Describe the role, responsibilities, and what makes this position exciting..."
               className="min-h-[150px]"
+              required
             />
           </div>
 
@@ -137,9 +173,11 @@ export function JobForm({
             <Label htmlFor="requirements">Requirements *</Label>
             <Textarea
               id="requirements"
-              defaultValue={initialData.requirements || ""}
+              value={formData.requirements}
+              onChange={(e) => handleChange("requirements", e.target.value)}
               placeholder="List the required skills, experience, and qualifications..."
               className="min-h-[120px]"
+              required
             />
           </div>
 
@@ -147,7 +185,8 @@ export function JobForm({
             <Label htmlFor="benefits">Benefits & Perks</Label>
             <Textarea
               id="benefits"
-              defaultValue={initialData.benefits || ""}
+              value={formData.benefits}
+              onChange={(e) => handleChange("benefits", e.target.value)}
               placeholder="List the benefits, perks, and what makes your company a great place to work..."
               className="min-h-[100px]"
             />
@@ -155,11 +194,11 @@ export function JobForm({
         </div>
 
         <div className="flex gap-4 pt-4">
-          <Button type="submit" className="flex-1">
-            {isEditMode ? "Update Job" : "Publish Job"}
+          <Button type="submit" className="flex-1" disabled={loading}>
+            {loading ? "Saving..." : isEditMode ? "Update Job" : "Publish Job"}
           </Button>
           {onCancel && (
-            <Button type="button" variant="outline" className="flex-1" onClick={onCancel}>
+            <Button type="button" variant="outline" className="flex-1" onClick={onCancel} disabled={loading}>
               Cancel
             </Button>
           )}
