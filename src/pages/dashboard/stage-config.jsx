@@ -7,16 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Plus, Trash2, Edit2, Save, MoveUp, MoveDown } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-
-const defaultStages = [
-  { id: "1", name: "HR Screening", description: "Initial resume screening and basic qualification check", order: 1 },
-  { id: "2", name: "Technical Screening", description: "Technical skills assessment and domain knowledge evaluation", order: 2 },
-  { id: "3", name: "Interview 1", description: "First round interview with team lead", order: 3 },
-  { id: "4", name: "Interview 2", description: "Second round interview with manager", order: 4 },
-  { id: "5", name: "HR Interview", description: "Final HR discussion on compensation and benefits", order: 5 },
-  { id: "6", name: "Offer Sent", description: "Official offer letter sent to candidate", order: 6 },
-  { id: "7", name: "Joined", description: "Candidate has joined the organization", order: 7 },
-];
+import { defaultStages } from "@/data/mock-data";
 
 export default function StageConfig() {
   const [stages, setStages] = useState(defaultStages);
@@ -40,8 +31,8 @@ export default function StageConfig() {
 
   const handleDeleteStage = (id) => {
     const updatedStages = stages
-      .filter((s) => s.id !== id)
-      .map((s, index) => ({ ...s, order: index + 1 }));
+      .filter((stage) => stage.id !== id)
+      .map((stage, index) => ({ ...stage, order: index + 1 }));
     setStages(updatedStages);
     toast({
       title: "Stage Deleted",
@@ -51,7 +42,7 @@ export default function StageConfig() {
 
   const handleSaveStage = (id, name, description) => {
     setStages(
-      stages.map((s) => (s.id === id ? { ...s, name, description } : s))
+      stages.map((stage) => (stage.id === id ? { ...stage, name, description } : stage))
     );
     setEditingId(null);
     toast({
@@ -66,12 +57,12 @@ export default function StageConfig() {
 
     const newStages = [...stages];
     [newStages[index], newStages[newIndex]] = [newStages[newIndex], newStages[index]];
-    const reorderedStages = newStages.map((s, i) => ({ ...s, order: i + 1 }));
+    const reorderedStages = newStages.map((stage, i) => ({ ...stage, order: i + 1 }));
     setStages(reorderedStages);
   };
 
   return (
-    <DashboardLayout userRole="recruiter">
+    <DashboardLayout>
       <div className="max-w-5xl space-y-6">
         <div className="flex items-center justify-between">
           <div>

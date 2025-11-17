@@ -6,7 +6,7 @@ import { ArrowRight, Layers, Settings2 } from "lucide-react";
 
 export default function Settings() {
   return (
-    <DashboardLayout userRole="recruiter">
+    <DashboardLayout>
       <div className="max-w-4xl space-y-6">
         <div>
           <h1 className="text-3xl font-bold text-foreground">Settings</h1>

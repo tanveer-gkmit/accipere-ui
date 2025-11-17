@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import { stages } from "@/data/mock-data";
 
 export default function StagePipeline({ currentStage, orientation = "horizontal", size = "md" }) {
-  const currentIndex = stages.findIndex((stage) => stage.id === currentStage);
+  const currentIndex = stages.findIndex(({ id }) => id === currentStage);
 
   const getStageStatus = (index) => ({
     isCompleted: index < currentIndex,
@@ -19,10 +19,11 @@ export default function StagePipeline({ currentStage, orientation = "horizontal"
     return (
       <div className="space-y-4">
         {stages.map((stage, index) => {
+          const { id, label } = stage;
           const { isCompleted, isCurrent, isPending } = getStageStatus(index);
 
           return (
-            <div key={stage.id} className="flex items-start gap-4">
+            <div key={id} className="flex items-start gap-4">
               <div className="flex flex-col items-center">
                 <div
                   className={cn(
@@ -42,7 +43,7 @@ export default function StagePipeline({ currentStage, orientation = "horizontal"
               </div>
               <div className="flex-1 pt-1">
                 <p className={cn(textSize, "font-medium", isCurrent ? "text-primary" : "text-foreground")}>
-                  {stage.label}
+                  {label}
                 </p>
                 {isCurrent && <p className="text-xs text-muted-foreground mt-1">Current Stage</p>}
               </div>
@@ -56,10 +57,11 @@ export default function StagePipeline({ currentStage, orientation = "horizontal"
   return (
     <div className="flex items-center justify-between w-full">
       {stages.map((stage, index) => {
+        const { id, label } = stage;
         const { isCompleted, isCurrent, isPending } = getStageStatus(index);
 
         return (
-          <div key={stage.id} className="flex items-center flex-1">
+          <div key={id} className="flex items-center flex-1">
             <div className="flex flex-col items-center w-full">
               <div
                 className={cn(
@@ -80,7 +82,7 @@ export default function StagePipeline({ currentStage, orientation = "horizontal"
                   isCurrent ? "text-primary" : "text-foreground"
                 )}
               >
-                {stage.label}
+                {label}
               </p>
             </div>
             {index < stages.length - 1 && (

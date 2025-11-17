@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Plus, Eye, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { formatDate } from "@/utility/date-utils";
 import { useEffect, useState } from "react";
 import { axiosInstance } from "@/api";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
@@ -49,7 +50,7 @@ export default function JobOpeningList() {
     }
   };
   return (
-    <DashboardLayout userRole="recruiter">
+    <DashboardLayout>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
@@ -89,12 +90,10 @@ export default function JobOpeningList() {
                       </div>
                     </div>
                   </div>
-
                   <div className="flex items-center gap-6 text-sm text-muted-foreground">
-                    <span>Posted {new Date(job.created_at).toLocaleDateString()}</span>
+                    <span>Posted {formatDate(job.created_at)}</span>
                   </div>
                 </div>
-
                 <div className="flex gap-2">
                   <Button variant="default" asChild>
                     <Link to={`/dashboard/jobs/${job.id}/applicants`}>

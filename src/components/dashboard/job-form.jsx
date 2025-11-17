@@ -13,18 +13,23 @@ export function JobForm({
   onCancel,
   loading = false
 }) {
+  const defaultFormData = {
+    title: "",
+    department: "",
+    location: "",
+    employment_type: "",
+    experience_level: "",
+    salary_min: "",
+    salary_max: "",
+    description: "",
+    requirements: "",
+    benefits: "",
+    status: "Open",
+  };
+
   const [formData, setFormData] = useState({
-    title: initialData.title || "",
-    department: initialData.department || "",
-    location: initialData.location || "",
-    employment_type: initialData.employment_type || "",
-    experience_level: initialData.experience_level || "",
-    salary_min: initialData.salary_min || "",
-    salary_max: initialData.salary_max || "",
-    description: initialData.description || "",
-    requirements: initialData.requirements || "",
-    benefits: initialData.benefits || "",
-    status: initialData.status || "Open",
+    ...defaultFormData,
+    ...initialData,
   });
 
   const handleChange = (field, value) => {
