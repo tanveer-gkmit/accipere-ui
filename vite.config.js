@@ -3,9 +3,9 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import path from 'path'
 import { VitePWA } from 'vite-plugin-pwa'
-// https://vite.dev/config/
+
 export default defineConfig({
-  plugins: [react(),tailwindcss(),
+  plugins: [react(), tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png'],
@@ -14,6 +14,9 @@ export default defineConfig({
         short_name: 'Accipere',
         description: 'Accipere : Smart Recruitment',
         theme_color: '#ffffff',
+        start_url: '/',
+        scope: '/',
+        display: 'fullscreen',
         icons: [
           {
             src: 'pwa-192x192.png',
