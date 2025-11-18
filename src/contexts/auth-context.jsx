@@ -29,6 +29,13 @@ export const AuthProvider = ({ children }) => {
     fetchUser().finally(() => setLoading(false));
   }, []);
 
+  // Logout function to clear user state
+  const logout = () => {
+    setUser(null);
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+  };
+
   const value = {
     user,
     loading,
@@ -36,6 +43,7 @@ export const AuthProvider = ({ children }) => {
     isRecruiter: user?.role === USER_ROLES.RECRUITER,
     isEvaluator: user?.role === USER_ROLES.TECHNICAL_EVALUATOR,
     refetchUser: fetchUser,
+    logout,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
