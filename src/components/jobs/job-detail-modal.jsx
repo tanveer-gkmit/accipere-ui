@@ -6,6 +6,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { MapPin, Briefcase, IndianRupee, Users, Building } from "lucide-react";
+import { formatSalaryRange } from "@/utility/salary-utils";
 
 export default function JobDetailModal({ job, isOpen, onClose, onApply }) {
   if (!job) return null;
@@ -51,12 +52,7 @@ export default function JobDetailModal({ job, isOpen, onClose, onApply }) {
                 <div>
                   <p className="text-sm text-muted-foreground mb-1">Salary Range</p>
                   <p className="font-semibold text-foreground text-base">
-                    {job.salary_min && job.salary_max 
-                      ? `₹${job.salary_min} - ₹${job.salary_max}`
-                      : job.salary_min 
-                        ? `₹${job.salary_min}+`
-                        : `Up to ₹${job.salary_max}`
-                    }
+                    {formatSalaryRange(job.salary_min, job.salary_max)}
                   </p>
                 </div>
               </div>
