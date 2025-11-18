@@ -1,10 +1,35 @@
+import { useState, useEffect } from "react";
 import { DashboardLayout } from "@/components/layout/dashboard-layout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { ArrowRight, Layers, Settings2 } from "lucide-react";
+import { ArrowRight, Layers, Settings2, Loader2 } from "lucide-react";
+import axiosInstance from "@/api/axios";
 
 export default function Settings() {
+  const [stages, setStages] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchStages = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await axiosInstance.get("/api/application-statuses/");
+        // API returns paginated response with results array
+        setStages(response.data.results || []);
+      } catch (err) {
+        console.error("Error fetching stages:", err);
+        setError(err.response?.data?.message || "Failed to load stages");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStages();
+  }, []);
+
   return (
     <DashboardLayout>
       <div className="max-w-4xl space-y-6">
@@ -42,24 +67,37 @@ export default function Settings() {
               <div className="flex-1">
                 <h3 className="text-lg font-semibold text-foreground mb-2">Current Stage Configuration</h3>
                 <p className="text-sm text-muted-foreground mb-4">Your active hiring pipeline stages:</p>
-                <div className="space-y-2">
-                  {[
-                    "HR Screening",
-                    "Technical Screening",
-                    "Interview 1",
-                    "Interview 2",
-                    "HR Interview",
-                    "Offer Sent",
-                    "Joined",
-                  ].map((stage, index) => (
-                    <div key={stage} className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
-                      <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-                        <span className="text-sm font-semibold text-primary">{index + 1}</span>
+                
+                {loading ? (
+                  <div className="flex items-center justify-center py-8">
+                    <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                    <span className="ml-2 text-muted-foreground">Loading stages...</span>
+                  </div>
+                ) : error ? (
+                  <div className="p-4 rounded-lg bg-destructive/10 text-destructive">
+                    {error}
+                  </div>
+                ) : stages.length === 0 ? (
+                  <div className="p-4 rounded-lg bg-muted/30 text-muted-foreground">
+                    No stages configured yet. Click "Configure Stage" to add stages.
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    {stages.map((stage) => (
+                      <div key={stage.id} className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
+                        <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+                          <span className="text-sm font-semibold text-primary">{stage.order_sequence + 1}</span>
+                        </div>
+                        <div className="flex-1">
+                          <span className="text-foreground font-medium">{stage.name}</span>
+                          {stage.description && (
+                            <p className="text-sm text-muted-foreground mt-1">{stage.description}</p>
+                          )}
+                        </div>
                       </div>
-                      <span className="text-foreground font-medium">{stage}</span>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           </Card>
