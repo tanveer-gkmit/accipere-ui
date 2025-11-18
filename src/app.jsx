@@ -32,10 +32,13 @@ function App() {
                 </PublicRoute>
               } 
             />
+            <Route path="/set-password" element={
+              <PublicRoute>
+                <SetPassword />
 
-            <PublicRoute>
-            <Route path="/set-password" element={<SetPassword />} />
-            </PublicRoute>
+                
+              </PublicRoute>
+            } />
 
             <Route path="/unauthorized" element={<UnauthorizedPage />} />
             
