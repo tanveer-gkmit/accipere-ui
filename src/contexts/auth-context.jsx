@@ -10,17 +10,23 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Get user info on mount
-  useEffect(() => {
+  // Function to fetch user data
+  const fetchUser = async () => {
     const token = localStorage.getItem('access_token');
     if (token) {
-      axiosInstance.get('/api/auth/me')
-        .then(res => setUser(res.data))
-        .catch(() => localStorage.removeItem('access_token'))
-        .finally(() => setLoading(false));
-    } else {
-      setLoading(false);
+      try {
+        const res = await axiosInstance.get('/api/auth/me');
+        setUser(res.data);
+      } catch (error) {
+        localStorage.removeItem('access_token');
+        setUser(null);
+      }
     }
+  };
+
+  // Get user info on mount
+  useEffect(() => {
+    fetchUser().finally(() => setLoading(false));
   }, []);
 
   const value = {
@@ -29,6 +35,7 @@ export const AuthProvider = ({ children }) => {
     isAdmin: user?.role === USER_ROLES.ADMINISTRATOR,
     isRecruiter: user?.role === USER_ROLES.RECRUITER,
     isEvaluator: user?.role === USER_ROLES.TECHNICAL_EVALUATOR,
+    refetchUser: fetchUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
