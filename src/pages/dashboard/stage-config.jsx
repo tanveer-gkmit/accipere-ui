@@ -275,9 +275,6 @@ function StageItem({ stage, isEditing, onEdit, onDelete, onSave, onCancel, onMov
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-1">
                 <h3 className="font-semibold text-foreground">{stage.name}</h3>
-                <Badge variant="secondary" className="text-xs">
-                  Stage {stage.order_sequence + 1}
-                </Badge>
               </div>
               <p className="text-sm text-muted-foreground">{stage.description}</p>
             </div>
