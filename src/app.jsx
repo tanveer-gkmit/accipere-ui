@@ -6,6 +6,7 @@ import { ProtectedRoute } from "@/middleware/protected-route";
 import { PublicRoute } from "@/middleware/public-route";
 import { ROLE_GROUPS } from "@/constants/roles";
 import LoginPage from "@/pages/auth/login"
+import SetPassword from "@/pages/set-password"
 import Jobs from "@/pages/index"
 import JobOpeningList from "@/pages/dashboard/job-opening-list"
 import JobCreate from "@/pages/dashboard/job-create"
@@ -31,6 +32,11 @@ function App() {
                 </PublicRoute>
               } 
             />
+
+            <PublicRoute>
+            <Route path="/set-password" element={<SetPassword />} />
+            </PublicRoute>
+
             <Route path="/unauthorized" element={<UnauthorizedPage />} />
             
             {/* Public route - accessible by anyone */}

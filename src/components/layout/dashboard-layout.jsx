@@ -7,15 +7,38 @@ import {
   LogOut
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/auth-context";
+import { USER_ROLES } from "@/constants/roles";
 
 const navigation = [
-  { name: "Jobs", href: "/dashboard/jobs", icon: Briefcase },
-  { name: "Organization", href: "/dashboard/organization", icon: Building2 },
-  { name: "Settings", href: "/dashboard/settings", icon: Settings },
+  { 
+    name: "Jobs", 
+    href: "/dashboard/jobs", 
+    icon: Briefcase,
+    allowedRoles: [USER_ROLES.ADMINISTRATOR, USER_ROLES.RECRUITER]
+  },
+  { 
+    name: "Organization", 
+    href: "/dashboard/organization", 
+    icon: Building2,
+    allowedRoles: [USER_ROLES.ADMINISTRATOR]
+  },
+  { 
+    name: "Settings", 
+    href: "/dashboard/settings", 
+    icon: Settings,
+    allowedRoles: [USER_ROLES.ADMINISTRATOR]
+  },
 ];
 
 export function DashboardLayout({ children }) {
   const location = useLocation();
+  const { user } = useAuth();
+
+  // Filter navigation items based on user role
+  const filteredNavigation = navigation.filter(item => 
+    !item.allowedRoles || item.allowedRoles.includes(user?.role)
+  );
 
   return (
     <div className="min-h-screen bg-background">
@@ -33,7 +56,7 @@ export function DashboardLayout({ children }) {
 
           {/* Navigation */}
           <nav className="flex-1 space-y-1 px-3 py-4">
-            {navigation.map((item) => {
+            {filteredNavigation.map((item) => {
               const isActive = location.pathname === item.href || 
                              location.pathname.startsWith(item.href + "/");
               return (
