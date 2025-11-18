@@ -28,7 +28,7 @@ export default function JobApplicants() {
       <div className="space-y-6">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" asChild>
-            <Link to="/recruiter/jobs">
+            <Link to="/dashboard/jobs">
               <ArrowLeft className="h-5 w-5" />
             </Link>
           </Button>
@@ -73,7 +73,7 @@ export default function JobApplicants() {
                       Resume
                     </Button>
                     <Button variant="default" size="sm" asChild>
-                      <Link to={`/recruiter/applicants/${id}`}>
+                      <Link to={`/dashboard/applicants/${id}`}>
                         View Profile
                       </Link>
                     </Button>

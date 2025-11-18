@@ -2,7 +2,7 @@ import { DashboardLayout } from "@/components/layout/dashboard-layout";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import { JobForm } from "@/components/recruiter/job-form";
+import { JobForm } from "@/components/dashboard/job-form";
 
 export default function JobCreate() {
   const navigate = useNavigate();
@@ -11,11 +11,11 @@ export default function JobCreate() {
     e.preventDefault();
     // Handle job creation
     console.log("Creating new job...");
-    navigate("/recruiter/jobs");
+    navigate("/dashboard/jobs");
   };
 
   const handleCancel = () => {
-    navigate("/recruiter/jobs");
+    navigate("/dashboard/jobs");
   };
 
   return (
@@ -23,7 +23,7 @@ export default function JobCreate() {
       <div className="max-w-4xl space-y-6">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" asChild>
-            <Link to="/recruiter/jobs">
+            <Link to="/dashboard/jobs">
               <ArrowLeft className="h-5 w-5" />
             </Link>
           </Button>
