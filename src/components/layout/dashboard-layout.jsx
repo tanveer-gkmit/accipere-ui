@@ -4,7 +4,8 @@ import {
   Briefcase, 
   Building2, 
   Settings,
-  LogOut
+  LogOut,
+  ClipboardList
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
@@ -19,6 +20,12 @@ const navigation = [
     href: "/dashboard/jobs", 
     icon: Briefcase,
     allowedRoles: [USER_ROLES.ADMINISTRATOR, USER_ROLES.RECRUITER]
+  },
+  { 
+    name: "My Queue", 
+    href: "/dashboard", 
+    icon: ClipboardList,
+    allowedRoles: [USER_ROLES.ADMINISTRATOR, USER_ROLES.RECRUITER,USER_ROLES.TECHNICAL_EVALUATOR]
   },
   { 
     name: "Organization", 
@@ -73,8 +80,9 @@ export function DashboardLayout({ children }) {
           {/* Navigation */}
           <nav className="flex-1 space-y-1 px-3 py-4">
             {filteredNavigation.map((item) => {
-              const isActive = location.pathname === item.href || 
-                             location.pathname.startsWith(item.href + "/");
+              const isActive = item.href === "/dashboard" 
+                ? location.pathname === "/dashboard"
+                : location.pathname === item.href || location.pathname.startsWith(item.href + "/");
               return (
                 <Link
                   key={item.name}

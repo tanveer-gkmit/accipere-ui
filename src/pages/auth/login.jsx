@@ -38,7 +38,7 @@ export default function Login() {
     if (response?.access) {
       // Fetch user data before navigating
       await refetchUser();
-      navigate("/dashboard/jobs");
+      navigate("/dashboard");
     } else {
       // Handle error response
       const generalError = response?.non_field_errors?.[0] 

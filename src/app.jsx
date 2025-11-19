@@ -4,10 +4,11 @@ import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/contexts/auth-context";
 import { ProtectedRoute } from "@/middleware/protected-route";
 import { PublicRoute } from "@/middleware/public-route";
-import { ROLE_GROUPS } from "@/constants/roles";
+import { ROLE_GROUPS ,USER_ROLES } from "@/constants/roles";
 import LoginPage from "@/pages/auth/login";
 import SetPassword from "@/pages/set-password";
 import Jobs from "@/pages/index";
+import Dashboard from "@/pages/dashboard/index";
 import JobOpeningList from "@/pages/dashboard/job-opening-list";
 import JobCreate from "@/pages/dashboard/job-create";
 import JobEdit from "@/pages/dashboard/job-edit";
@@ -18,6 +19,7 @@ import Settings from "@/pages/dashboard/settings";
 import StageConfig from "@/pages/dashboard/stage-config";
 import UnauthorizedPage from "@/pages/unauthorized";
 import NotFound from "@/pages/not-found";
+import { UserRound } from "lucide-react";
 
 function App() {
   return (
@@ -55,6 +57,14 @@ function App() {
 
             {/* Dashboard Routes - Administrator & Recruiter */}
             <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute allowedRoles={[USER_ROLES.ADMINISTRATOR,USER_ROLES.RECRUITER,USER_ROLES.TECHNICAL_EVALUATOR]}>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/dashboard/jobs"
               element={
                 <ProtectedRoute allowedRoles={ROLE_GROUPS.DASHBOARD_ACCESS}>
@@ -89,7 +99,7 @@ function App() {
             <Route
               path="/dashboard/applicants/:applicantId"
               element={
-                <ProtectedRoute allowedRoles={ROLE_GROUPS.DASHBOARD_ACCESS}>
+                <ProtectedRoute allowedRoles={[USER_ROLES.ADMINISTRATOR,USER_ROLES.RECRUITER,USER_ROLES.TECHNICAL_EVALUATOR]}>
                   <ApplicantDetail />
                 </ProtectedRoute>
               }

@@ -10,7 +10,7 @@ export const PublicRoute = ({ children }) => {
   // If logged in, redirect to dashboard
   if (user) {
     if (ROLE_GROUPS.DASHBOARD_ACCESS.includes(user.role)) {
-      return <Navigate to="/dashboard/jobs" replace />;
+      return <Navigate to="/dashboard" replace />;
     }
     return <Navigate to="/" replace />;
   }
