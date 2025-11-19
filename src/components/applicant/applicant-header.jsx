@@ -25,16 +25,16 @@ export function ApplicantHeader({
       <div className="flex items-start gap-6">
         <Avatar className="h-24 w-24">
           <AvatarFallback className="text-2xl">
-            {first_name[0]}{last_name[0]}
+            {first_name?.[0]}{last_name?.[0]}
           </AvatarFallback>
         </Avatar>
 
         <div className="flex-1 space-y-4">
           <div>
             <h2 className="text-2xl font-bold text-foreground">
-              {first_name} {last_name}
+              {first_name || ''} {last_name || ''}
             </h2>
-            <p className="text-muted-foreground">{current_job_title}</p>
+            <p className="text-muted-foreground">{current_job_title || 'N/A'}</p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-3 text-sm">
