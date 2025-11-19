@@ -157,13 +157,20 @@ export default function Organization() {
     }
   };
 
-  const handleAddUser = async (userData) => {
-    setActionLoading("add");
-    const { data, error } = await usersService.createUser(userData);
+  const handleUserSubmit = async (userData, isEdit = false) => {
+    const loadingKey = isEdit ? "edit" : "add";
+    setActionLoading(loadingKey);
+    
+    const { data, error } = isEdit 
+      ? await usersService.updateUser(editingUser.id, userData)
+      : await usersService.createUser(userData);
+    
     setActionLoading(null);
 
     if (error) {
-      let errorMessage = "Failed to create user";
+      const defaultMessage = isEdit ? "Failed to update user" : "Failed to create user";
+      let errorMessage = defaultMessage;
+      
       if (typeof error === "object" && error.email) {
         errorMessage = error.email[0];
       } else if (typeof error === "string") {
@@ -175,44 +182,33 @@ export default function Organization() {
         description: errorMessage,
         variant: "destructive",
       });
-    } else {
-      setUsers(Array.isArray(users) ? [...users, data] : [data]);
-      setIsAddDialogOpen(false);
-      toast({
-        title: "User Added",
-        description: `${data.first_name} ${data.last_name} has been added. A password setup email has been sent.`,
-      });
+      return;
     }
-  };
 
-  const handleEditUser = async (userData) => {
-    setActionLoading("edit");
-    const { data, error } = await usersService.updateUser(editingUser.id, userData);
-    setActionLoading(null);
-
-    if (error) {
-      let errorMessage = "Failed to update user";
-      if (typeof error === "object" && error.email) {
-        errorMessage = error.email[0];
-      } else if (typeof error === "string") {
-        errorMessage = error;
-      }
-      
-      toast({
-        title: "Error",
-        description: errorMessage,
-        variant: "destructive",
-      });
-    } else {
+    // Update users list
+    if (isEdit) {
       setUsers(users.map(user => user.id === editingUser.id ? { ...user, ...data } : user));
       setIsEditDialogOpen(false);
       setEditingUser(null);
-      toast({
-        title: "User Updated",
-        description: `${data.first_name} ${data.last_name} has been updated successfully.`,
-      });
+    } else {
+      setUsers(Array.isArray(users) ? [...users, data] : [data]);
+      setIsAddDialogOpen(false);
     }
+
+    // Show success toast
+    const successTitle = isEdit ? "User Updated" : "User Added";
+    const successDescription = isEdit 
+      ? `${data.first_name} ${data.last_name} has been updated successfully.`
+      : `${data.first_name} ${data.last_name} has been added. A password setup email has been sent.`;
+    
+    toast({
+      title: successTitle,
+      description: successDescription,
+    });
   };
+
+  const handleAddUser = (userData) => handleUserSubmit(userData, false);
+  const handleEditUser = (userData) => handleUserSubmit(userData, true);
 
   const openEditDialog = (user) => {
     setEditingUser(user);
