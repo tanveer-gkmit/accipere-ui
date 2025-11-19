@@ -16,7 +16,7 @@ export function useApplicantData(applicantId) {
       try {
         const [stagesResponse, usersResponse] = await Promise.all([
           axiosInstance.get("/api/application-statuses/"),
-          axiosInstance.get("/api/users/simple/")
+          axiosInstance.get("/api/users/?simple=true")
         ]);
         
         console.log('Raw stages from API:', stagesResponse.data.results);

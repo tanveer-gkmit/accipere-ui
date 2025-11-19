@@ -142,7 +142,7 @@ export function StatusUpdateForm({ applicant, stages, users, isUpdating, onUpdat
               {users?.map((user) => (
                 <SelectItem key={user.id} value={user.id}>
                   <div className="flex flex-col items-start">
-                    <span className="font-medium">{user.name}</span>
+                    <span className="font-medium">{user.name} - {user.role_name}</span>
                     <span className="text-xs text-muted-foreground">{user.email}</span>
                   </div>
                 </SelectItem>
