@@ -94,7 +94,7 @@ export default function ApplicantDetail() {
   };
 
   return (
-    <DashboardLayout userRole="recruiter">
+    <DashboardLayout>
       <div className="space-y-6 max-w-6xl">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" asChild>
