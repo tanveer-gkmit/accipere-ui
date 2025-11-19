@@ -11,6 +11,7 @@ import { stageColors } from "@/data/mock-data";
 import axiosInstance from "@/api/axios";
 import { useResume } from "@/hooks/use-resume";
 import { useToast } from "@/hooks/use-toast";
+import { ROUTES, getApplicantDetailRoute } from "@/constants/routes";
 
 export default function JobApplicants() {
   const { jobId } = useParams();
@@ -87,7 +88,7 @@ export default function JobApplicants() {
       <div className="space-y-6">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" asChild>
-            <Link to="/dashboard/jobs">
+            <Link to={ROUTES.DASHBOARD_JOBS}>
               <ArrowLeft className="h-5 w-5" />
             </Link>
           </Button>
@@ -172,7 +173,7 @@ export default function JobApplicants() {
                         {resumeLoading ? "Loading..." : "Resume"}
                       </Button>
                       <Button variant="default" size="sm" asChild>
-                        <Link to={`/dashboard/applicants/${id}`}>
+                        <Link to={getApplicantDetailRoute(id)}>
                           View Profile
                         </Link>
                       </Button>

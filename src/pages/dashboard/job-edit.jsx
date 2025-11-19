@@ -5,6 +5,7 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import { JobForm } from "@/components/dashboard/job-form";
 import { axiosInstance } from "@/api";
 import { useEffect, useState } from "react";
+import { ROUTES } from "@/constants/routes";
 
 export default function JobEdit() {
   const { jobId } = useParams();
@@ -56,7 +57,7 @@ export default function JobEdit() {
       await axiosInstance.patch(`/api/jobs/${jobId}/`, jobUpdateData);
       
       // Navigate to jobs list on success
-      navigate("/dashboard/jobs");
+      navigate(ROUTES.DASHBOARD_JOBS);
     } catch (err) {
       console.error("Error updating job:", err);
       setError(err.response?.data?.detail || err.message || "Failed to update job");
@@ -66,7 +67,7 @@ export default function JobEdit() {
   };
 
   const handleCancel = () => {
-    navigate("/dashboard/jobs");
+    navigate(ROUTES.DASHBOARD_JOBS);
   };
 
   if (loading) {
@@ -86,7 +87,7 @@ export default function JobEdit() {
           <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
             {error}
           </div>
-          <Button onClick={() => navigate("/dashboard/jobs")}>Back to Jobs</Button>
+          <Button onClick={() => navigate(ROUTES.DASHBOARD_JOBS)}>Back to Jobs</Button>
         </div>
       </DashboardLayout>
     );
@@ -97,7 +98,7 @@ export default function JobEdit() {
       <div className="max-w-4xl space-y-6">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" asChild>
-            <Link to="/dashboard/jobs">
+            <Link to={ROUTES.DASHBOARD_JOBS}>
               <ArrowLeft className="h-5 w-5" />
             </Link>
           </Button>

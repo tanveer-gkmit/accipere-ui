@@ -11,31 +11,32 @@ import { Button } from "@/components/ui/button";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { useAuth } from "@/contexts/auth-context";
 import { USER_ROLES } from "@/constants/roles";
+import { ROUTES } from "@/constants/routes";
 import { authService } from "@/api/auth";
 import { toast } from "sonner";
 
 const navigation = [
   { 
     name: "Jobs", 
-    href: "/dashboard/jobs", 
+    href: ROUTES.DASHBOARD_JOBS, 
     icon: Briefcase,
     allowedRoles: [USER_ROLES.ADMINISTRATOR, USER_ROLES.RECRUITER]
   },
   { 
     name: "My Queue", 
-    href: "/dashboard", 
+    href: ROUTES.DASHBOARD, 
     icon: ClipboardList,
-    allowedRoles: [USER_ROLES.ADMINISTRATOR, USER_ROLES.RECRUITER,USER_ROLES.TECHNICAL_EVALUATOR]
+    allowedRoles: [USER_ROLES.ADMINISTRATOR, USER_ROLES.RECRUITER, USER_ROLES.TECHNICAL_EVALUATOR]
   },
   { 
     name: "Organization", 
-    href: "/dashboard/organization", 
+    href: ROUTES.DASHBOARD_ORGANIZATION, 
     icon: Building2,
     allowedRoles: [USER_ROLES.ADMINISTRATOR]
   },
   { 
     name: "Settings", 
-    href: "/dashboard/settings", 
+    href: ROUTES.DASHBOARD_SETTINGS, 
     icon: Settings,
     allowedRoles: [USER_ROLES.ADMINISTRATOR]
   },
@@ -56,7 +57,7 @@ export function DashboardLayout({ children }) {
       await authService.logout();
       logout(); // Clear user state in context
       toast.success("Logged out successfully");
-      navigate("/login");
+      navigate(ROUTES.LOGIN);
     } catch (error) {
       toast.error("Failed to logout. Please try again.");
       console.error("Logout error:", error);
@@ -80,8 +81,8 @@ export function DashboardLayout({ children }) {
           {/* Navigation */}
           <nav className="flex-1 space-y-1 px-3 py-4">
             {filteredNavigation.map((item) => {
-              const isActive = item.href === "/dashboard" 
-                ? location.pathname === "/dashboard"
+              const isActive = item.href === ROUTES.DASHBOARD 
+                ? location.pathname === ROUTES.DASHBOARD
                 : location.pathname === item.href || location.pathname.startsWith(item.href + "/");
               return (
                 <Link

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { DashboardLayout } from "@/components/layout/dashboard-layout";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Loader2 } from "lucide-react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import ResumeViewerModal from "@/components/jobs/resume-viewer-modal";
 import { useToast } from "@/hooks/use-toast";
 import { useResume } from "@/hooks/use-resume";
@@ -13,6 +13,7 @@ import { StatusUpdateForm } from "@/components/applicant/status-update-form";
 import { ProfessionalInfoCard } from "@/components/applicant/professional-info-card";
 import { ActivityTimeline } from "@/components/applicant/activity-timeline";
 import { AddressCard } from "@/components/applicant/address-card";
+import { ROUTES } from "@/constants/routes";
 
 export default function ApplicantDetail() {
   const { applicantId } = useParams();
@@ -76,7 +77,7 @@ export default function ApplicantDetail() {
             {error || "Applicant not found"}
           </p>
           <Button asChild>
-            <Link to="/dashboard">Back to Dashboard</Link>
+            <Link to={ROUTES.DASHBOARD}>Back to Dashboard</Link>
           </Button>
         </div>
       </DashboardLayout>

@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { JobForm } from "@/components/dashboard/job-form";
 import { axiosInstance } from "@/api";
 import { useState } from "react";
+import { ROUTES } from "@/constants/routes";
 
 export default function JobCreate() {
   const navigate = useNavigate();
@@ -35,7 +36,7 @@ export default function JobCreate() {
       await axiosInstance.post("/api/jobs/", jobData);
       
       // Navigate to jobs list on success
-      navigate("/dashboard/jobs");
+      navigate(ROUTES.DASHBOARD_JOBS);
     } catch (err) {
       console.error("Error creating job:", err);
       setError(err.response?.data?.detail || err.message || "Failed to create job");
@@ -45,7 +46,7 @@ export default function JobCreate() {
   };
 
   const handleCancel = () => {
-    navigate("/dashboard/jobs");
+    navigate(ROUTES.DASHBOARD_JOBS);
   };
 
   return (
@@ -53,7 +54,7 @@ export default function JobCreate() {
       <div className="max-w-4xl space-y-6">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" asChild>
-            <Link to="/dashboard/jobs">
+            <Link to={ROUTES.DASHBOARD_JOBS}>
               <ArrowLeft className="h-5 w-5" />
             </Link>
           </Button>

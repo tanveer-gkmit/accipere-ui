@@ -4,7 +4,8 @@ import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/contexts/auth-context";
 import { ProtectedRoute } from "@/middleware/protected-route";
 import { PublicRoute } from "@/middleware/public-route";
-import { ROLE_GROUPS ,USER_ROLES } from "@/constants/roles";
+import { ROLE_GROUPS, USER_ROLES } from "@/constants/roles";
+import { ROUTES } from "@/constants/routes";
 import LoginPage from "@/pages/auth/login";
 import SetPassword from "@/pages/set-password";
 import Jobs from "@/pages/index";
@@ -28,7 +29,7 @@ function App() {
         <AuthProvider>
           <Routes>
             <Route
-              path="/login"
+              path={ROUTES.LOGIN}
               element={
                 <PublicRoute>
                   <LoginPage />
@@ -36,7 +37,7 @@ function App() {
               }
             />
             <Route
-              path="/set-password"
+              path={ROUTES.SET_PASSWORD}
               element={
                 <PublicRoute>
                   <SetPassword />
@@ -45,7 +46,7 @@ function App() {
             />
 
             <Route
-              path="/"
+              path={ROUTES.HOME}
               element={
                 <PublicRoute>
                   <Jobs />
@@ -53,19 +54,19 @@ function App() {
               }
             />
             
-            <Route path="/unauthorized" element={<UnauthorizedPage />} />
+            <Route path={ROUTES.UNAUTHORIZED} element={<UnauthorizedPage />} />
 
             {/* Dashboard Routes - Administrator & Recruiter */}
             <Route
-              path="/dashboard"
+              path={ROUTES.DASHBOARD}
               element={
-                <ProtectedRoute allowedRoles={[USER_ROLES.ADMINISTRATOR,USER_ROLES.RECRUITER,USER_ROLES.TECHNICAL_EVALUATOR]}>
+                <ProtectedRoute allowedRoles={[USER_ROLES.ADMINISTRATOR, USER_ROLES.RECRUITER, USER_ROLES.TECHNICAL_EVALUATOR]}>
                   <Dashboard />
                 </ProtectedRoute>
               }
             />
             <Route
-              path="/dashboard/jobs"
+              path={ROUTES.DASHBOARD_JOBS}
               element={
                 <ProtectedRoute allowedRoles={ROLE_GROUPS.DASHBOARD_ACCESS}>
                   <JobOpeningList />
@@ -73,7 +74,7 @@ function App() {
               }
             />
             <Route
-              path="/dashboard/jobs/new"
+              path={ROUTES.DASHBOARD_JOBS_NEW}
               element={
                 <ProtectedRoute allowedRoles={ROLE_GROUPS.DASHBOARD_ACCESS}>
                   <JobCreate />
@@ -81,7 +82,7 @@ function App() {
               }
             />
             <Route
-              path="/dashboard/jobs/:jobId/edit"
+              path={ROUTES.DASHBOARD_JOBS_EDIT}
               element={
                 <ProtectedRoute allowedRoles={ROLE_GROUPS.DASHBOARD_ACCESS}>
                   <JobEdit />
@@ -89,7 +90,7 @@ function App() {
               }
             />
             <Route
-              path="/dashboard/jobs/:jobId/applicants"
+              path={ROUTES.DASHBOARD_JOBS_APPLICANTS}
               element={
                 <ProtectedRoute allowedRoles={ROLE_GROUPS.DASHBOARD_ACCESS}>
                   <JobApplicants />
@@ -97,9 +98,9 @@ function App() {
               }
             />
             <Route
-              path="/dashboard/applicants/:applicantId"
+              path={ROUTES.DASHBOARD_APPLICANT_DETAIL}
               element={
-                <ProtectedRoute allowedRoles={[USER_ROLES.ADMINISTRATOR,USER_ROLES.RECRUITER,USER_ROLES.TECHNICAL_EVALUATOR]}>
+                <ProtectedRoute allowedRoles={[USER_ROLES.ADMINISTRATOR, USER_ROLES.RECRUITER, USER_ROLES.TECHNICAL_EVALUATOR]}>
                   <ApplicantDetail />
                 </ProtectedRoute>
               }
@@ -107,7 +108,7 @@ function App() {
 
             {/* Administrator only */}
             <Route
-              path="/dashboard/organization"
+              path={ROUTES.DASHBOARD_ORGANIZATION}
               element={
                 <ProtectedRoute allowedRoles={ROLE_GROUPS.ADMIN_ONLY}>
                   <Organization />
@@ -115,7 +116,7 @@ function App() {
               }
             />
             <Route
-              path="/dashboard/settings"
+              path={ROUTES.DASHBOARD_SETTINGS}
               element={
                 <ProtectedRoute allowedRoles={ROLE_GROUPS.ADMIN_ONLY}>
                   <Settings />
@@ -123,7 +124,7 @@ function App() {
               }
             />
             <Route
-              path="/dashboard/settings/stage"
+              path={ROUTES.DASHBOARD_SETTINGS_STAGE}
               element={
                 <ProtectedRoute allowedRoles={ROLE_GROUPS.ADMIN_ONLY}>
                   <StageConfig />

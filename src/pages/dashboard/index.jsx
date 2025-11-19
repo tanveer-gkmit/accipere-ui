@@ -8,6 +8,7 @@ import { formatDate } from "@/utility/date-utils";
 import { useEffect, useState } from "react";
 import { axiosInstance } from "@/api";
 import { useAuth } from "@/contexts/auth-context";
+import { getApplicantDetailRoute } from "@/constants/routes";
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -84,7 +85,7 @@ export default function Dashboard() {
                 </div>
                 <div className="flex gap-2">
                   <Button variant="default" asChild>
-                    <Link to={`/dashboard/applicants/${application.id}`}>
+                    <Link to={getApplicantDetailRoute(application.id)}>
                       <Eye className="h-4 w-4 mr-2" />
                       View Details
                     </Link>

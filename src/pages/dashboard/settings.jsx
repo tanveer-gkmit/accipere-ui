@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { ArrowRight, Layers, Settings2, Loader2 } from "lucide-react";
 import axiosInstance from "@/api/axios";
+import { ROUTES } from "@/constants/routes";
 
 export default function Settings() {
   const [stages, setStages] = useState([]);
@@ -50,7 +51,7 @@ export default function Settings() {
                   Customize your recruitment stage configuration, add or remove steps, and configure the hiring pipeline to match your organization's process.
                 </p>
                 <Button asChild>
-                  <Link to="/dashboard/settings/stage">
+                  <Link to={ROUTES.DASHBOARD_SETTINGS_STAGE}>
                     Configure Stage
                     <ArrowRight className="h-4 w-4 ml-2" />
                   </Link>

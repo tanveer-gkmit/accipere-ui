@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { ROUTES } from "@/constants/routes";
 
 export default function NotFound() {
   const navigate = useNavigate();
@@ -31,7 +32,7 @@ export default function NotFound() {
               Go Back
             </Button>
             <Button
-              onClick={() => navigate("/")}
+              onClick={() => navigate(ROUTES.HOME)}
               className="w-full sm:w-auto"
             >
               Go Home

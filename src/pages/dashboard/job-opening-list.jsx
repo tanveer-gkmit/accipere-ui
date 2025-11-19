@@ -10,6 +10,7 @@ import { axiosInstance } from "@/api";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { RoleGuard } from "@/middleware/role-guard";
 import { ROLE_GROUPS } from "@/constants/roles";
+import { ROUTES, getJobEditRoute, getJobApplicantsRoute } from "@/constants/routes";
 
 export default function JobOpeningList() {
   const [jobs, setJobs] = useState([]);
@@ -58,7 +59,7 @@ export default function JobOpeningList() {
             <p className="text-muted-foreground mt-1">Manage all your job postings</p>
           </div>
           <Button asChild>
-            <Link to="/dashboard/jobs/new">
+            <Link to={ROUTES.DASHBOARD_JOBS_NEW}>
               <Plus className="h-4 w-4 mr-2" />
               Post New Job
             </Link>
@@ -96,13 +97,13 @@ export default function JobOpeningList() {
                 </div>
                 <div className="flex gap-2">
                   <Button variant="default" asChild>
-                    <Link to={`/dashboard/jobs/${job.id}/applicants`}>
+                    <Link to={getJobApplicantsRoute(job.id)}>
                       <Eye className="h-4 w-4 mr-2" />
                       View Applicants
                     </Link>
                   </Button>
                   <Button variant="outline" asChild>
-                    <Link to={`/dashboard/jobs/${job.id}/edit`}>
+                    <Link to={getJobEditRoute(job.id)}>
                       <Edit className="h-4 w-4 mr-2" />
                       Edit
                     </Link>
