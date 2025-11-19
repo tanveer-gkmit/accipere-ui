@@ -163,11 +163,12 @@ export default function Organization() {
     setActionLoading(null);
 
     if (error) {
-      const errorMessage = typeof error === "object" && error.email
-        ? error.email[0]
-        : typeof error === "string"
-        ? error
-        : "Failed to create user";
+      let errorMessage = "Failed to create user";
+      if (typeof error === "object" && error.email) {
+        errorMessage = error.email[0];
+      } else if (typeof error === "string") {
+        errorMessage = error;
+      }
       
       toast({
         title: "Error",
@@ -190,11 +191,12 @@ export default function Organization() {
     setActionLoading(null);
 
     if (error) {
-      const errorMessage = typeof error === "object" && error.email
-        ? error.email[0]
-        : typeof error === "string"
-        ? error
-        : "Failed to update user";
+      let errorMessage = "Failed to update user";
+      if (typeof error === "object" && error.email) {
+        errorMessage = error.email[0];
+      } else if (typeof error === "string") {
+        errorMessage = error;
+      }
       
       toast({
         title: "Error",
@@ -202,7 +204,7 @@ export default function Organization() {
         variant: "destructive",
       });
     } else {
-      setUsers(users.map(u => u.id === editingUser.id ? { ...u, ...data } : u));
+      setUsers(users.map(user => user.id === editingUser.id ? { ...user, ...data } : user));
       setIsEditDialogOpen(false);
       setEditingUser(null);
       toast({
