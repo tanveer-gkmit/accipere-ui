@@ -66,20 +66,26 @@ export default function Settings() {
                 <h3 className="text-lg font-semibold text-foreground mb-2">Current Stage Configuration</h3>
                 <p className="text-sm text-muted-foreground mb-4">Your active hiring pipeline stages:</p>
                 
-                {loading ? (
+                {loading && (
                   <div className="flex items-center justify-center py-8">
                     <Loader2 className="h-6 w-6 animate-spin text-primary" />
                     <span className="ml-2 text-muted-foreground">Loading stages...</span>
                   </div>
-                ) : error ? (
+                )}
+                
+                {!loading && error && (
                   <div className="p-4 rounded-lg bg-destructive/10 text-destructive">
                     {error}
                   </div>
-                ) : stages.length === 0 ? (
+                )}
+                
+                {!loading && !error && stages.length === 0 && (
                   <div className="p-4 rounded-lg bg-muted/30 text-muted-foreground">
                     No stages configured yet. Click "Configure Stage" to add stages.
                   </div>
-                ) : (
+                )}
+                
+                {!loading && !error && stages.length > 0 && (
                   <div className="space-y-2">
                     {stages.map((stage) => (
                       <div key={stage.id} className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
