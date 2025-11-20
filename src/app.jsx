@@ -15,7 +15,9 @@ import ApplicantDetail from "@/pages/dashboard/applicant-detail"
 import Organization from "@/pages/dashboard/organization"
 import Settings from "@/pages/dashboard/settings"
 import StageConfig from "@/pages/dashboard/stage-config"
+import UnauthorizedPage from './pages/unauthorized';
 import { Navigate } from "react-router-dom";
+
 function App() {
   return (
     <>
