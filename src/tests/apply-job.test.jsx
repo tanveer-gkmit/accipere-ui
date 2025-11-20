@@ -3,6 +3,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import ApplyFormModal from '../components/jobs/apply-form-modal';
 import { axiosInstance } from '../api';
 import { toast } from 'sonner';
+import { createMockFile } from '../constants/test-data';
 
 /**
  * Test Suite: Job Application Form
@@ -39,7 +40,7 @@ describe('Job Application Flow', () => {
     vi.clearAllMocks();
   });
 
-  const mockFile = new File(['resume content'], 'resume.pdf', { type: 'application/pdf' });
+  const mockFile = createMockFile();
 
   it('renders apply form modal with job title', () => {
     render(
