@@ -7,14 +7,14 @@ import { PublicRoute } from "@/middleware/public-route";
 import { ROLE_GROUPS } from "@/constants/roles";
 import LoginPage from "@/pages/auth/login"
 import Jobs from "@/pages/index"
-import JobOpeningList from "@/pages/recruiter/job-opening-list"
-import JobCreate from "@/pages/recruiter/job-create"
-import JobEdit from "@/pages/recruiter/job-edit"
-import JobApplicants from "@/pages/recruiter/job-applicants"
-import ApplicantDetail from "@/pages/recruiter/applicant-detail"
-import Organization from "@/pages/recruiter/organization"
-import Settings from "@/pages/recruiter/settings"
-import StageConfig from "@/pages/recruiter/stage-config"
+import JobOpeningList from "@/pages/dashboard/job-opening-list"
+import JobCreate from "@/pages/dashboard/job-create"
+import JobEdit from "@/pages/dashboard/job-edit"
+import JobApplicants from "@/pages/dashboard/job-applicants"
+import ApplicantDetail from "@/pages/dashboard/applicant-detail"
+import Organization from "@/pages/dashboard/organization"
+import Settings from "@/pages/dashboard/settings"
+import StageConfig from "@/pages/dashboard/stage-config"
 import { Navigate } from "react-router-dom";
 function App() {
   return (
