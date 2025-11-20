@@ -25,7 +25,7 @@ export function ApplicantHeader({
       <div className="flex items-start gap-6">
         <Avatar className="h-24 w-24">
           <AvatarFallback className="text-2xl">
-            {first_name?.[0]}{last_name?.[0]}
+            {first_name?.[0] || '?'}{last_name?.[0] || '?'}
           </AvatarFallback>
         </Avatar>
 
