@@ -230,7 +230,7 @@ export default function StageConfig() {
                 onMoveUp={() => moveStage(index, "up")}
                 onMoveDown={() => moveStage(index, "down")}
                 isFirstStage={index === 0}
-                isLast={index === stages.length - 1}
+                isLastStage={index === stages.length - 1}
                 disabled={saving}
               />
             ))}
@@ -241,7 +241,7 @@ export default function StageConfig() {
   );
 }
 
-function StageItem({ stage, isEditing, onEdit, onDelete, onSave, onCancel, onMoveUp, onMoveDown, isFirstStage, isLast, disabled }) {
+function StageItem({ stage, isEditing, onEdit, onDelete, onSave, onCancel, onMoveUp, onMoveDown, isFirstStage, isLastStage, disabled }) {
   return (
     <Card className="p-5">
       {isEditing ? (
@@ -264,7 +264,7 @@ function StageItem({ stage, isEditing, onEdit, onDelete, onSave, onCancel, onMov
                 size="icon"
                 className="h-6 w-6"
                 onClick={onMoveDown}
-                disabled={isLast || disabled}
+                disabled={isLastStage || disabled}
               >
                 <MoveDown className="h-4 w-4" />
               </Button>
