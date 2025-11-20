@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { ArrowRight, Layers, Settings2, Loader2 } from "lucide-react";
-import axiosInstance from "@/api/axios";
+import { stagesService } from "@/api";
 
 export default function Settings() {
   const [stages, setStages] = useState([]);
@@ -13,18 +13,16 @@ export default function Settings() {
 
   useEffect(() => {
     const fetchStages = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const response = await axiosInstance.get("/api/application-statuses/");
-        // API returns paginated response with results array
-        setStages(response.data.results || []);
-      } catch (err) {
-        console.error("Error fetching stages:", err);
-        setError(err.response?.data?.message || "Failed to load stages");
-      } finally {
-        setLoading(false);
+      setLoading(true);
+      setError(null);
+      const { data, error } = await stagesService.getStages();
+      if (error) {
+        console.error("Error fetching stages:", error);
+        setError(error);
+      } else {
+        setStages(data);
       }
+      setLoading(false);
     };
 
     fetchStages();
