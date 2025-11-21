@@ -27,7 +27,6 @@ export default function ApplicantDetail() {
     if (isResumeViewerOpen && applicantId && !resumeUrl) {
       fetchResume(applicantId);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isResumeViewerOpen, applicantId, resumeUrl]);
 
   useEffect(() => cleanup, [cleanup]);

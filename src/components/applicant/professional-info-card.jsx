@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card";
-
+import { Link } from "react-router-dom";
 export function ProfessionalInfoCard({ applicant }) {
   const {
     total_experience,
@@ -55,24 +55,24 @@ export function ProfessionalInfoCard({ applicant }) {
           <h3 className="text-lg font-semibold text-foreground mt-6 mb-3">Links</h3>
           <div className="space-y-2">
             {linkedin && (
-              <a 
-                href={linkedin} 
+              <Link
+                to={{ pathname: linkedin }} 
                 target="_blank" 
-                rel="noopener noreferrer" 
+                rel="noopener noreferrer"
                 className="text-sm text-primary hover:underline block"
               >
                 LinkedIn Profile →
-              </a>
+              </Link>
             )}
             {github && (
-              <a 
-                href={github} 
+              <Link
+                to={{ pathname: github }} 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-sm text-primary hover:underline block"
               >
                 GitHub Profile →
-              </a>
+              </Link>
             )}
           </div>
         </>

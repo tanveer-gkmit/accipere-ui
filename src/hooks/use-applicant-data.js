@@ -19,7 +19,6 @@ export function useApplicantData(applicantId) {
           axiosInstance.get("/api/users/?simple=true")
         ]);
         
-        console.log('Raw stages from API:', stagesResponse.data.results);
         setAllStages(stagesResponse.data.results || []);
         
         const users = Array.isArray(usersResponse.data) 
@@ -64,7 +63,6 @@ export function useApplicantData(applicantId) {
     };
 
     fetchApplicantData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [applicantId]);
 
   const stages = useMemo(() => 
