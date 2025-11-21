@@ -14,9 +14,7 @@ export function useApplicantStatus(applicantId) {
       if (userId !== undefined) payload.assigned_user_id = userId;
       if (notes?.trim()) payload.status_notes = notes.trim();
 
-      await axiosInstance.patch(`/api/applications/${applicantId}/`, payload);
-      
-      const response = await axiosInstance.get(`/api/applications/${applicantId}/`);
+      const response = await axiosInstance.patch(`/api/applications/${applicantId}/`, payload);
       
       toast({
         title: "Status Updated",

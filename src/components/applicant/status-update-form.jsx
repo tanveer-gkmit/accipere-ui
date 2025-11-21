@@ -25,18 +25,15 @@ export function StatusUpdateForm({ applicant, stages, users, isUpdating, onUpdat
 
   // Filter stages to only show forward-moving statuses
   const currentStage = stages.find(s => s.value === currentStatus?.id);
-  console.log('stages:', stages);
-  console.log(currentStage)
   const currentOrder = currentStage?.order ?? currentStatus?.order;
   
   
   const availableStages = stages.filter(stage => {
-    if (currentOrder === undefined || currentOrder === null) {
+    if (!currentOrder) {
       return true; // If no current order, show all
     }
     
     const isAvailable = stage.order >= currentOrder;
-    console.log(`Stage ${stage.label} (order ${stage.order}) >= ${currentOrder}:`, isAvailable);
     return isAvailable;
   });
 
