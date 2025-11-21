@@ -4,10 +4,9 @@ export const rolesService = {
   async getRoles() {
     try {
       const response = await axiosInstance.get("/api/roles/");
-      return { data: response.data.results || [], error: null };
+      return { data: response.data.results || [] };
     } catch (error) {
       return {
-        data: null,
         error: error.response?.data?.detail || "Failed to fetch roles",
       };
     }

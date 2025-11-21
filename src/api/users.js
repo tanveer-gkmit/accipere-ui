@@ -4,10 +4,9 @@ export const usersService = {
   async getUsers() {
     try {
       const response = await axiosInstance.get("/api/users/");
-      return { data: response.data.results || [], error: null };
+      return { data: response.data.results || [] };
     } catch (error) {
       return {
-        data: null,
         error: error.response?.data?.detail || "Failed to fetch users",
       };
     }
@@ -16,10 +15,9 @@ export const usersService = {
   async createUser(userData) {
     try {
       const response = await axiosInstance.post("/api/users/", userData);
-      return { data: response.data, error: null };
+      return { data: response.data };
     } catch (error) {
       return {
-        data: null,
         error: error.response?.data || "Failed to create user",
       };
     }
@@ -28,10 +26,9 @@ export const usersService = {
   async updateUser(userId, userData) {
     try {
       const response = await axiosInstance.patch(`/api/users/${userId}/`, userData);
-      return { data: response.data, error: null };
+      return { data: response.data };
     } catch (error) {
       return {
-        data: null,
         error: error.response?.data || "Failed to update user",
       };
     }
@@ -40,10 +37,9 @@ export const usersService = {
   async deleteUser(userId) {
     try {
       const response = await axiosInstance.delete(`/api/users/${userId}/`);
-      return { data: response.data, error: null };
+      return { data: response.data };
     } catch (error) {
       return {
-        data: null,
         error: error.response?.data?.detail || "Failed to delete user",
       };
     }
@@ -52,10 +48,9 @@ export const usersService = {
   async resetPassword(userId) {
     try {
       const response = await axiosInstance.post(`/api/users/${userId}/reset-password/`);
-      return { data: response.data, error: null };
+      return { data: response.data };
     } catch (error) {
       return {
-        data: null,
         error: error.response?.data?.detail || "Failed to reset password",
       };
     }
