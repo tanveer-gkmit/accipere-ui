@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import axiosInstance from '@/api/axios';
 import { USER_ROLES } from '@/constants/roles';
+import { useToast } from '@/hooks/use-toast';
 
 const AuthContext = createContext(null);
 
@@ -9,18 +10,30 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { toast } = useToast();
+
+  // Function to fetch user data
+  const fetchUser = async () => {
+    const token = localStorage.getItem('access_token');
+    if (token) {
+      try {
+        const res = await axiosInstance.get('/api/auth/me');
+        setUser(res.data);
+      } catch (error) {
+        localStorage.removeItem('access_token');
+        setUser(null);
+        toast({
+          title: 'Session Expired',
+          description: 'Your session has expired. Please log in again.',
+          variant: 'destructive',
+        });
+      }
+    }
+  };
 
   // Get user info on mount
   useEffect(() => {
-    const token = localStorage.getItem('access_token');
-    if (token) {
-      axiosInstance.get('/api/auth/me')
-        .then(res => setUser(res.data))
-        .catch(() => localStorage.removeItem('access_token'))
-        .finally(() => setLoading(false));
-    } else {
-      setLoading(false);
-    }
+    fetchUser().finally(() => setLoading(false));
   }, []);
 
   const value = {
@@ -29,6 +42,7 @@ export const AuthProvider = ({ children }) => {
     isAdmin: user?.role === USER_ROLES.ADMINISTRATOR,
     isRecruiter: user?.role === USER_ROLES.RECRUITER,
     isEvaluator: user?.role === USER_ROLES.TECHNICAL_EVALUATOR,
+    refetchUser: fetchUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

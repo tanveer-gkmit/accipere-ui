@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { authService } from "@/api/auth";
 import { validateEmail, validatePassword } from "@/utility/validation";
+import { useAuth } from "@/contexts/auth-context";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -13,6 +14,7 @@ export default function Login() {
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const { refetchUser } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,7 +36,9 @@ export default function Login() {
     
     // Check if login was successful (has access token)
     if (response?.access) {
-      navigate("/");
+      // Fetch user data before navigating
+      await refetchUser();
+      navigate("/dashboard/jobs");
     } else {
       // Handle error response
       const generalError = response?.non_field_errors?.[0] 
