@@ -1,4 +1,4 @@
-import './app.css'
+import "./app.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/contexts/auth-context";
@@ -17,6 +17,7 @@ import Organization from "@/pages/dashboard/organization"
 import Settings from "@/pages/dashboard/settings"
 import StageConfig from "@/pages/dashboard/stage-config"
 import UnauthorizedPage from "@/pages/unauthorized"
+import NotFound from "@/pages/not-found";
 import { Navigate } from "react-router-dom";
 
 function App() {
@@ -112,14 +113,17 @@ function App() {
                 <ProtectedRoute allowedRoles={ROLE_GROUPS.ADMIN_ONLY}>
                   <StageConfig />
                 </ProtectedRoute>
-              } 
+              }
             />
+
+            {/* 404 - Catch all unmatched routes */}
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
       </BrowserRouter>
       <Toaster />
     </>
-  )
+  );
 }
 
-export default App
+export default App;

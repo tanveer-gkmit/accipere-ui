@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { 
   Briefcase, 
@@ -7,8 +7,11 @@ import {
   LogOut
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { useAuth } from "@/contexts/auth-context";
 import { USER_ROLES } from "@/constants/roles";
+import { authService } from "@/api/auth";
+import { toast } from "sonner";
 
 const navigation = [
   { 
@@ -33,12 +36,25 @@ const navigation = [
 
 export function DashboardLayout({ children }) {
   const location = useLocation();
-  const { user } = useAuth();
+  const navigate = useNavigate();
+  const { user, logout } = useAuth();
 
   // Filter navigation items based on user role
   const filteredNavigationOnRole = navigation.filter(item => 
     !item.allowedRoles || item.allowedRoles.includes(user?.role)
   );
+
+  const handleLogout = async () => {
+    try {
+      await authService.logout();
+      logout(); // Clear user state in context
+      toast.success("Logged out successfully");
+      navigate("/login");
+    } catch (error) {
+      toast.error("Failed to logout. Please try again.");
+      console.error("Logout error:", error);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -79,10 +95,22 @@ export function DashboardLayout({ children }) {
 
           {/* User section */}
           <div className="border-t border-border p-4">
-            <Button variant="ghost" className="w-full justify-start text-muted-foreground hover:text-foreground">
-              <LogOut className="h-5 w-5 mr-3" />
-              Logout
-            </Button>
+            <ConfirmDialog
+              trigger={
+                <Button 
+                  variant="ghost" 
+                  className="w-full justify-start text-muted-foreground hover:text-foreground"
+                >
+                  <LogOut className="h-5 w-5 mr-3" />
+                  Logout
+                </Button>
+              }
+              title="Confirm Logout"
+              description="Are you sure you want to logout? You will need to login again to access the dashboard."
+              onConfirm={handleLogout}
+              confirmText="Logout"
+              cancelText="Cancel"
+            />
           </div>
         </div>
       </aside>

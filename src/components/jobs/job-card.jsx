@@ -1,6 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { MapPin, Briefcase } from "lucide-react";
+import { formatDate } from "@/utility/date-utils";
 import { formatSalaryRange } from "@/utility/salary-utils";
 
 export default function JobCard({ job, onViewDetails }) {
@@ -35,7 +36,7 @@ export default function JobCard({ job, onViewDetails }) {
 
         <div className="flex items-center justify-between pt-2">
           <span className="text-sm text-muted-foreground">
-            Posted {job.posted_date}
+            Posted - {formatDate(job.created_at)}
           </span>
           <Button onClick={() => onViewDetails(job.id)}>View Details</Button>
         </div>

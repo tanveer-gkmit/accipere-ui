@@ -2,7 +2,7 @@ import { DashboardLayout } from "@/components/layout/dashboard-layout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Eye, Trash2 } from "lucide-react";
+import { Plus, Eye, Trash2, Edit } from "lucide-react";
 import { Link } from "react-router-dom";
 import { formatDate } from "@/utility/date-utils";
 import { useEffect, useState } from "react";
@@ -103,6 +103,7 @@ export default function JobOpeningList() {
                   </Button>
                   <Button variant="outline" asChild>
                     <Link to={`/dashboard/jobs/${job.id}/edit`}>
+                      <Edit className="h-4 w-4 mr-2" />
                       Edit
                     </Link>
                   </Button>
