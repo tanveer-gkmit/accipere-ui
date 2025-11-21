@@ -1,30 +1,15 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { DashboardLayout } from "@/components/layout/dashboard-layout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { ArrowRight, Layers, Settings2, Loader2 } from "lucide-react";
-import { stagesService } from "@/api";
+import { useStages } from "@/hooks/use-stages";
 
 export default function Settings() {
-  const [stages, setStages] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { stages, loading, fetchStages } = useStages();
 
   useEffect(() => {
-    const fetchStages = async () => {
-      setLoading(true);
-      setError(null);
-      const { data, error } = await stagesService.getStages();
-      if (error) {
-        console.error("Error fetching stages:", error);
-        setError(error);
-      } else {
-        setStages(data);
-      }
-      setLoading(false);
-    };
-
     fetchStages();
   }, []);
 
@@ -73,19 +58,13 @@ export default function Settings() {
                   </div>
                 )}
                 
-                {!loading && error && (
-                  <div className="p-4 rounded-lg bg-destructive/10 text-destructive">
-                    {error}
-                  </div>
-                )}
-                
-                {!loading && !error && stages.length === 0 && (
+                {!loading && stages.length === 0 && (
                   <div className="p-4 rounded-lg bg-muted/30 text-muted-foreground">
                     No stages configured yet. Click "Configure Stage" to add stages.
                   </div>
                 )}
                 
-                {!loading && !error && stages.length > 0 && (
+                {!loading && stages.length > 0 && (
                   <div className="space-y-2">
                     {stages.map((stage) => (
                       <div key={stage.id} className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
