@@ -1,17 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { DashboardLayout } from "@/components/layout/dashboard-layout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import {
   Dialog,
   DialogContent,
@@ -27,53 +18,154 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Plus, KeyRound, Trash2 } from "lucide-react";
+import { Plus, KeyRound, Trash2, Loader2, Pencil } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { USER_ROLES, ROLE_BADGE_VARIANTS } from "@/constants/roles";
-
-const initialFormData = {
-  email: "",
-  first_name: "",
-  last_name: "",
-  role: USER_ROLES.RECRUITER,
-};
-import { mockUsers } from "@/data/mock-data";
+import { ROLE_BADGE_VARIANTS } from "@/constants/roles";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { usersService, rolesService } from "@/api";
+import { UserForm } from "@/components/organization/user-form";
 
 export default function Organization() {
-  const [users, setUsers] = useState(mockUsers);
+  const [users, setUsers] = useState([]);
+  const [roles, setRoles] = useState([]);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [editingUser, setEditingUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [actionLoading, setActionLoading] = useState(null);
   const { toast } = useToast();
 
-  const handleAddUser = (userData) => {
-    const newUser = {
-      id: String(Date.now()),
-      ...userData,
-    };
-    setUsers([...users, newUser]);
-    setIsAddDialogOpen(false);
+  // Fetch users and roles on mount
+  useEffect(() => {
+    fetchUsers();
+    fetchRoles();
+  }, []);
+
+  const fetchUsers = async () => {
+    setLoading(true);
+    const { data, error } = await usersService.getUsers();
+    if (error) {
+      toast({
+        title: "Error",
+        description: typeof error === "string" ? error : "Failed to fetch users",
+        variant: "destructive",
+      });
+      setUsers([]);
+    } else {
+      // Ensure data is an array
+      setUsers(Array.isArray(data) ? data : []);
+    }
+    setLoading(false);
+  };
+
+  const fetchRoles = async () => {
+    const { data, error } = await rolesService.getRoles();
+    if (!error && data) {
+      setRoles(Array.isArray(data) ? data : []);
+    } else {
+      setRoles([]);
+    }
+  };
+
+  const handleUserSubmit = async (userData, isEdit = false) => {
+    const loadingKey = isEdit ? "edit" : "add";
+    setActionLoading(loadingKey);
+    
+    const { data, error } = isEdit 
+      ? await usersService.updateUser(editingUser.id, userData)
+      : await usersService.createUser(userData);
+    
+    setActionLoading(null);
+
+    if (error) {
+      const defaultMessage = isEdit ? "Failed to update user" : "Failed to create user";
+      let errorMessage = defaultMessage;
+      
+      if (typeof error === "object" && error.email) {
+        errorMessage = error.email[0];
+      } else if (typeof error === "string") {
+        errorMessage = error;
+      }
+      
+      toast({
+        title: "Error",
+        description: errorMessage,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Update users list
+    if (isEdit) {
+      setUsers(users.map(user => user.id === editingUser.id ? { ...user, ...data } : user));
+      setIsEditDialogOpen(false);
+      setEditingUser(null);
+    } else {
+      setUsers(Array.isArray(users) ? [...users, data] : [data]);
+      setIsAddDialogOpen(false);
+    }
+
+    // Show success toast
+    const successTitle = isEdit ? "User Updated" : "User Added";
+    const successDescription = isEdit 
+      ? `${data.first_name} ${data.last_name} has been updated successfully.`
+      : `${data.first_name} ${data.last_name} has been added. A password setup email has been sent.`;
+    
     toast({
-      title: "User Added",
-      description: `${userData.first_name} ${userData.last_name} has been added to the organization.`,
+      title: successTitle,
+      description: successDescription,
     });
   };
 
-  const handleResetPassword = (user) => {
-    toast({
-      title: "Password Reset",
-      description: `Password reset email sent to ${user.email}`,
-    });
+  const handleAddUser = (userData) => handleUserSubmit(userData, false);
+  const handleEditUser = (userData) => handleUserSubmit(userData, true);
+
+  const openEditDialog = (user) => {
+    setEditingUser(user);
+    setIsEditDialogOpen(true);
   };
 
-  const handleDeleteUser = (userId) => {
-    setUsers(users.filter((u) => u.id !== userId));
-    toast({
-      title: "User Removed",
-      description: "User has been removed from the organization.",
-    });
+  const handleResetPassword = async (userId, userEmail) => {
+    setActionLoading(`reset-${userId}`);
+    const { error } = await usersService.resetPassword(userId);
+    setActionLoading(null);
+
+    if (error) {
+      toast({
+        title: "Error",
+        description: typeof error === "string" ? error : "Failed to reset password",
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Password Reset",
+        description: `Password reset email has been sent to ${userEmail}`,
+      });
+    }
   };
 
-  const getRoleBadgeVariant = (role) => {
-    return ROLE_BADGE_VARIANTS[role] || "secondary";
+  const handleDeleteUser = async (userId) => {
+    setActionLoading(`delete-${userId}`);
+    const { error } = await usersService.deleteUser(userId);
+    setActionLoading(null);
+
+    if (error) {
+      toast({
+        title: "Error",
+        description: typeof error === "string" ? error : "Failed to delete user",
+        variant: "destructive",
+      });
+    } else {
+      setUsers(Array.isArray(users) ? users.filter((u) => u.id !== userId) : []);
+      toast({
+        title: "User Removed",
+        description: "User has been removed from the organization.",
+      });
+    }
+  };
+
+  const getRoleBadgeVariant = (roleName) => {
+    return ROLE_BADGE_VARIANTS[roleName] || "secondary";
   };
 
   return (
@@ -97,7 +189,12 @@ export default function Organization() {
               <DialogHeader>
                 <DialogTitle>Add New User</DialogTitle>
               </DialogHeader>
-              <AddUserForm onSubmit={handleAddUser} />
+              <UserForm 
+                onSubmit={handleAddUser} 
+                roles={roles}
+                loading={actionLoading === "add"}
+                isEdit={false}
+              />
             </DialogContent>
           </Dialog>
         </div>
@@ -119,129 +216,130 @@ export default function Organization() {
                 <TableHead>Name</TableHead>
                 <TableHead>Email</TableHead>
                 <TableHead>Role</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Password</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {users.map((user) => {
-                const { id, first_name, last_name, email, role } = user;
-                return (
-                  <TableRow key={id}>
-                    <TableCell className="font-medium">
-                      {first_name} {last_name}
-                    </TableCell>
-                    <TableCell>{email}</TableCell>
-                    <TableCell>
-                      <Badge variant={getRoleBadgeVariant(role)}>
-                        {role}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleResetPassword(user)}
-                        >
-                          <KeyRound className="h-4 w-4 mr-1" />
-                          Reset Password
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleDeleteUser(id)}
-                        >
-                          <Trash2 className="h-4 w-4 text-destructive" />
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
+              {loading ? (
+                <TableRow>
+                  <TableCell colSpan={6} className="text-center py-8">
+                    <Loader2 className="h-6 w-6 animate-spin mx-auto" />
+                  </TableCell>
+                </TableRow>
+              ) : users.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                    No users found. Add your first user to get started.
+                  </TableCell>
+                </TableRow>
+              ) : (
+                users.map((user) => {
+                  const { id, first_name, last_name, email, role_name, is_active, is_password_set } = user;
+                  return (
+                    <TableRow key={id}>
+                      <TableCell className="font-medium">
+                        {first_name} {last_name}
+                      </TableCell>
+                      <TableCell>{email}</TableCell>
+                      <TableCell>
+                        <Badge variant={getRoleBadgeVariant(role_name)}>
+                          {role_name}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant={is_active ? "default" : "secondary"}>
+                          {is_active ? "Active" : "Inactive"}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant={is_password_set ? "default" : "destructive"}>
+                          {is_password_set ? "Set" : "Pending"}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex justify-end gap-2">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => openEditDialog(user)}
+                            disabled={actionLoading !== null}
+                          >
+                            <Pencil className="h-4 w-4 mr-1" />
+                            Edit
+                          </Button>
+                          <ConfirmDialog
+                            trigger={
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                disabled={actionLoading !== null}
+                              >
+                                {actionLoading === `reset-${id}` ? (
+                                  <Loader2 className="h-4 w-4 animate-spin" />
+                                ) : (
+                                  <>
+                                    <KeyRound className="h-4 w-4 mr-1" />
+                                    Reset Password
+                                  </>
+                                )}
+                              </Button>
+                            }
+                            title="Reset Password"
+                            description={`Are you sure you want to reset the password for ${first_name} ${last_name}? This will invalidate their current password and send them a password reset email.`}
+                            onConfirm={() => handleResetPassword(id, email)}
+                            confirmText="Reset Password"
+                            variant="default"
+                          />
+                          <ConfirmDialog
+                            trigger={
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                disabled={actionLoading !== null}
+                              >
+                                {actionLoading === `delete-${id}` ? (
+                                  <Loader2 className="h-4 w-4 animate-spin text-destructive" />
+                                ) : (
+                                  <Trash2 className="h-4 w-4 text-destructive" />
+                                )}
+                              </Button>
+                            }
+                            title="Delete User"
+                            description={`Are you sure you want to delete ${first_name} ${last_name}? This action cannot be undone.`}
+                            onConfirm={() => handleDeleteUser(id)}
+                            confirmText="Delete"
+                            variant="destructive"
+                          />
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
+              )}
             </TableBody>
           </Table>
         </Card>
+
+        {/* Edit User Dialog */}
+        <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Edit User</DialogTitle>
+            </DialogHeader>
+            {editingUser && (
+              <UserForm 
+                onSubmit={handleEditUser} 
+                roles={roles}
+                loading={actionLoading === "edit"}
+                initialData={editingUser}
+                isEdit={true}
+              />
+            )}
+          </DialogContent>
+        </Dialog>
       </div>
     </DashboardLayout>
-  );
-}
-
-function AddUserForm({ onSubmit }) {
-  const [formData, setFormData] = useState(initialFormData);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onSubmit(formData);
-    setFormData(initialFormData);
-  };
-
-  return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="firstName">First Name *</Label>
-          <Input
-            id="firstName"
-            required
-            value={formData.first_name}
-            onChange={(e) =>
-              setFormData({ ...formData, first_name: e.target.value })
-            }
-            placeholder="John"
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="lastName">Last Name *</Label>
-          <Input
-            id="lastName"
-            required
-            value={formData.last_name}
-            onChange={(e) =>
-              setFormData({ ...formData, last_name: e.target.value })
-            }
-            placeholder="Doe"
-          />
-        </div>
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="email">Email *</Label>
-        <Input
-          id="email"
-          type="email"
-          required
-          value={formData.email}
-          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-          placeholder="john.doe@company.com"
-        />
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="role">Role *</Label>
-        <Select
-          value={formData.role}
-          onValueChange={(value) =>
-            setFormData({ ...formData, role: value })
-          }
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Select a role" />
-          </SelectTrigger>
-          <SelectContent>
-            {Object.entries(USER_ROLES).map(([key, value]) => (
-              <SelectItem key={value} value={value}>
-                {value}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      <div className="flex gap-3 pt-4">
-        <Button type="submit" className="flex-1">
-          Add User
-        </Button>
-      </div>
-    </form>
   );
 }

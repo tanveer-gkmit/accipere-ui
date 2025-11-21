@@ -6,6 +6,7 @@ import { ProtectedRoute } from "@/middleware/protected-route";
 import { PublicRoute } from "@/middleware/public-route";
 import { ROLE_GROUPS } from "@/constants/roles";
 import LoginPage from "@/pages/auth/login"
+import SetPassword from "@/pages/set-password"
 import Jobs from "@/pages/index"
 import JobOpeningList from "@/pages/dashboard/job-opening-list"
 import JobCreate from "@/pages/dashboard/job-create"
@@ -15,7 +16,7 @@ import ApplicantDetail from "@/pages/dashboard/applicant-detail"
 import Organization from "@/pages/dashboard/organization"
 import Settings from "@/pages/dashboard/settings"
 import StageConfig from "@/pages/dashboard/stage-config"
-import UnauthorizedPage from './pages/unauthorized';
+import UnauthorizedPage from "@/pages/unauthorized"
 import { Navigate } from "react-router-dom";
 
 function App() {
@@ -33,6 +34,14 @@ function App() {
                 </PublicRoute>
               } 
             />
+            <Route path="/set-password" element={
+              <PublicRoute>
+                <SetPassword />
+
+                
+              </PublicRoute>
+            } />
+
             <Route path="/unauthorized" element={<UnauthorizedPage />} />
             
             {/* Public route - accessible by anyone */}
