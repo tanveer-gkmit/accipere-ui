@@ -127,57 +127,68 @@ export default function JobApplicants() {
           </Card>
         )}
 
-        
         {/* Candidates List */}
         {!loading && !error && applicants.length > 0 && (
-        <div className="space-y-4">
-          <h2 className="text-xl font-semibold text-foreground">Applicants</h2>
-          {applicants.map((applicant) => {
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold text-foreground">Applicants</h2>
+            {applicants.map((applicant) => {
               const { id, full_name, email, phone_no, current_status_name, created_at } = applicant;
-            return (
-              <Card key={id} className="p-6 hover:shadow-lg transition-all duration-200">
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex-1">
-                    <div className="flex items-start justify-between mb-3">
-                      <div>
-                        <h3 className="text-lg font-semibold text-foreground">{full_name}</h3>
-                        <div className="flex items-center gap-2 mt-1 text-sm text-muted-foreground">
-                          <Mail className="h-4 w-4" />
-                          <span>{email}</span>
+              return (
+                <Card key={id} className="p-6 hover:shadow-lg transition-all duration-200">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex-1">
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="space-y-1">
+                          <h3 className="text-lg font-semibold text-foreground">{full_name}</h3>
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <Mail className="h-4 w-4 shrink-0" />
+                            <span>{email}</span>
+                          </div>
+                          {phone_no && (
+                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                              <Phone className="h-4 w-4 shrink-0" />
+                              <span>{phone_no}</span>
+                            </div>
+                          )}
                         </div>
+                        <Badge className={getStageColor(current_status_name)}>
+                          {current_status_name}
+                        </Badge>
                       </div>
-                      <Badge className={getStageColor(current_status_name)}>
-                        {current_status_name}
-                      </Badge>
+
+                      <div className="flex items-center gap-6 text-sm text-muted-foreground">
+                        <span>Applied: {formatDate(created_at)}</span>
+                      </div>
                     </div>
 
-                    <div className="flex items-center gap-6 text-sm text-muted-foreground">
-                      <span>Applied: {formatDate(created_at)}</span>
+                    <div className="flex gap-2">
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        onClick={() => handleViewResume(applicant)}
+                        disabled={resumeLoading}
+                      >
+                        <FileText className="h-4 w-4 mr-2" />
+                        {resumeLoading ? "Loading..." : "Resume"}
+                      </Button>
+                      <Button variant="default" size="sm" asChild>
+                        <Link to={`/dashboard/applicants/${id}`}>
+                          View Profile
+                        </Link>
+                      </Button>
                     </div>
                   </div>
-
-                  <div className="flex gap-2">
-                    <Button variant="outline" size="sm" onClick={() => handleViewResume(candidate)}>
-                      <FileText className="h-4 w-4 mr-2" />
-                      Resume
-                    </Button>
-                    <Button variant="default" size="sm" asChild>
-                      <Link to={`/dashboard/applicants/${id}`}>
-                        View Profile
-                      </Link>
-                    </Button>
-                  </div>
-                </div>
-              </Card>
-            );
-          })}
-        </div>
+                </Card>
+              );
+            })}
+          </div>
         )}
+
         <ResumeViewerModal
           isOpen={isResumeViewerOpen}
-          onClose={() => setIsResumeViewerOpen(false)}
-          resumeUrl="/resume.pdf"
-          candidateName={selectedCandidate?.name || ""}
+          onClose={handleCloseResume}
+          resumeUrl={resumeUrl || ""}
+          candidateName={selectedCandidate?.full_name || ""}
         />
       </div>
     </DashboardLayout>

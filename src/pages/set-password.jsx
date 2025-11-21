@@ -17,7 +17,7 @@ const usersService = {
         password,
         password_confirm,
       });
-      return { ata: response.data};
+      return { data: response.data};
     } catch (error) {
       return {
         data: null,

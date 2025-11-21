@@ -1,340 +1,131 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { DashboardLayout } from "@/components/layout/dashboard-layout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Mail, Phone, MapPin, Calendar, FileText, ArrowLeft, Download } from "lucide-react";
+import { Mail, Phone, MapPin, Calendar, FileText, ArrowLeft, Download, Loader2 } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
-import StagePipeline from "@/components/dashboard/stage-pipeline";
 import ResumeViewerModal from "@/components/jobs/resume-viewer-modal";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
-
-import { mockApplicant, mockTimeline, stages } from "@/data/mock-data";
-import { formatDate, formatDateTime } from "@/utility/date-utils";
+import { useResume } from "@/hooks/use-resume";
+import { useApplicantData } from "@/hooks/use-applicant-data";
+import { useApplicantStatus } from "@/hooks/use-applicant-status";
+import { ApplicantHeader } from "@/components/applicant/applicant-header";
+import { StatusUpdateForm } from "@/components/applicant/status-update-form";
+import { ProfessionalInfoCard } from "@/components/applicant/professional-info-card";
+import { ActivityTimeline } from "@/components/applicant/activity-timeline";
+import { AddressCard } from "@/components/applicant/address-card";
 
 export default function ApplicantDetail() {
   const { applicantId } = useParams();
   const { toast } = useToast();
+  const { resumeUrl, fetchResume, downloadResume, cleanup } = useResume();
+  const { applicantData, loading, error, stages, allUsers, setApplicantData } = useApplicantData(applicantId);
+  const { updateStatus, isUpdating } = useApplicantStatus(applicantId);
   
-  const {
-    first_name,
-    last_name,
-    email,
-    phone,
-    city,
-    state,
-    zip_code,
-    street,
-    current_job_title,
-    job_title,
-    applied_date,
-    stage,
-    total_experience,
-    relevant_experience,
-    current_ctc,
-    expected_ctc,
-    notice_period,
-    skill_set,
-    linkedin,
-    github
-  } = mockApplicant;
-  
-  const [currentStage, setCurrentStage] = useState(stage);
-  const [note, setNote] = useState("");
-  const [pendingStage, setPendingStage] = useState(null);
-  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [isResumeViewerOpen, setIsResumeViewerOpen] = useState(false);
 
-  const handleStageChangeRequest = (newStage) => {
-    if (newStage !== currentStage) {
-      setPendingStage(newStage);
-      setShowConfirmDialog(true);
+  useEffect(() => {
+    if (isResumeViewerOpen && applicantId && !resumeUrl) {
+      fetchResume(applicantId);
+    }
+  }, [isResumeViewerOpen, applicantId, resumeUrl]);
+
+  useEffect(() => cleanup, [cleanup]);
+
+  const handleStatusUpdate = async (statusId, userId, notes) => {
+    try {
+      const updated = await updateStatus(statusId, userId, notes);
+      setApplicantData(updated);
+    } catch (err) {
+      // Error handled in hook
     }
   };
 
-  const handleConfirmStageChange = () => {
-    if (pendingStage) {
-      setCurrentStage(pendingStage);
-      const stageName = stages.find((s) => s.value === pendingStage)?.label;
+  const handleDownloadResume = async () => {
+    if (!applicantId || !applicantData) return;
+    
+    try {
+      const filename = applicantData.resume_filename || 
+        `${applicantData.first_name}_${applicantData.last_name}_Resume.pdf`;
+      await downloadResume(applicantId, filename);
+    } catch (err) {
       toast({
-        title: "Stage Updated",
-        description: `${first_name} ${last_name} moved to ${stageName}${note ? ' with notes' : ''}`,
+        title: "Error",
+        description: "Failed to download resume",
+        variant: "destructive",
       });
-      // Here you would save the note along with the stage change to the backend
-      // The note will be stored in APPLICATION_ASSIGNED_USER_STATUSES.notes
-      setNote(""); // Clear the note after saving
-      setPendingStage(null);
     }
-    setShowConfirmDialog(false);
   };
 
-  const handleCancelStageChange = () => {
-    setPendingStage(null);
-    setShowConfirmDialog(false);
-  };
+  if (loading) {
+    return (
+      <DashboardLayout>
+        <div className="flex items-center justify-center min-h-[400px]">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      </DashboardLayout>
+    );
+  }
+
+  if (error || !applicantData) {
+    return (
+      <DashboardLayout>
+        <div className="flex flex-col items-center justify-center min-h-[400px] space-y-4">
+          <p className="text-lg text-muted-foreground">
+            {error || "Applicant not found"}
+          </p>
+          <Button asChild>
+            <Link to="/dashboard/jobs">Back to Jobs</Link>
+          </Button>
+        </div>
+      </DashboardLayout>
+    );
+  }
+
+  const { first_name, last_name, job_details, street, city, zip_code, status_history } = applicantData;
 
   return (
     <DashboardLayout>
       <div className="space-y-6 max-w-6xl">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" asChild>
-            <Link to="/dashboard/jobs/1/applicants">
+            <Link to={`/dashboard/jobs/${job_details?.id}/applicants`}>
               <ArrowLeft className="h-5 w-5" />
             </Link>
           </Button>
           <div className="flex-1">
             <h1 className="text-3xl font-bold text-foreground">Applicant Details</h1>
-            <p className="text-muted-foreground mt-1">{job_title}</p>
+            <p className="text-muted-foreground mt-1">{job_details?.title || "Job Position"}</p>
           </div>
         </div>
 
-        <Card className="p-6">
-          <div className="flex items-start gap-6">
-            <Avatar className="h-24 w-24">
-              <AvatarFallback className="text-2xl">
-                {first_name[0]}{last_name[0]}
-              </AvatarFallback>
-            </Avatar>
+        <ApplicantHeader
+          applicant={applicantData}
+          onViewResume={() => setIsResumeViewerOpen(true)}
+          onDownloadResume={handleDownloadResume}
+        />
 
-            <div className="flex-1 space-y-4">
-              <div>
-                <h2 className="text-2xl font-bold text-foreground">
-                  {first_name} {last_name}
-                </h2>
-                <p className="text-muted-foreground">{current_job_title}</p>
-              </div>
-
-              <div className="grid md:grid-cols-2 gap-3 text-sm">
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <Mail className="h-4 w-4" />
-                  <span>{email}</span>
-                </div>
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <Phone className="h-4 w-4" />
-                  <span>{phone}</span>
-                </div>
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <MapPin className="h-4 w-4" />
-                  <span>{city}, {state} {zip_code}</span>
-                </div>
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <Calendar className="h-4 w-4" />
-                  <span>Applied {formatDate(applied_date)}</span>
-                </div>
-              </div>
-
-              <div className="flex gap-2 pt-2">
-                <Button variant="outline" onClick={() => setIsResumeViewerOpen(true)}>
-                  <FileText className="h-4 w-4 mr-2" />
-                  View Resume
-                </Button>
-                <Button variant="outline" asChild>
-                  <a href="/resume.pdf" download={`${first_name}_${last_name}_Resume.pdf`}>
-                    <Download className="h-4 w-4 mr-2" />
-                    Download Resume
-                  </a>
-                </Button>
-              </div>
-            </div>
-          </div>
-        </Card>
-
-        <Card className="p-6">
-          <h3 className="text-lg font-semibold text-foreground mb-6">Hiring Stage Progress</h3>
-          <StagePipeline currentStage={currentStage} orientation="horizontal" size="md" />
-        </Card>
-
-        <Card className="p-6">
-          <h3 className="text-lg font-semibold text-foreground mb-4">Stage</h3>
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="stage-select">Current Stage</Label>
-              <Select value={currentStage} onValueChange={handleStageChangeRequest}>
-                <SelectTrigger className="w-full mt-2">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {stages.map((stage) => (
-                    <SelectItem key={stage.value} value={stage.value}>
-                      {stage.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="stage-note">Add Note</Label>
-              <Textarea
-                id="stage-note"
-                placeholder="Add feedback or notes for the current stage..."
-                className="min-h-[100px]"
-                value={note}
-                onChange={(e) => setNote(e.target.value)}
-              />
-              <Button 
-                onClick={() => {
-                  if (note.trim()) {
-                    toast({
-                      title: "Note Saved",
-                      description: "Your feedback has been saved successfully.",
-                    });
-                    setNote("");
-                  }
-                }}
-                disabled={!note.trim()}
-              >
-                Save Note
-              </Button>
-            </div>
-          </div>
-        </Card>
-
-        <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Confirm Stage Change</AlertDialogTitle>
-              <AlertDialogDescription>
-                Are you sure you want to move {first_name} {last_name} from{" "}
-                <span className="font-semibold">
-                  {stages.find((s) => s.value === currentStage)?.label}
-                </span>{" "}
-                to{" "}
-                <span className="font-semibold">
-                  {stages.find((s) => s.value === pendingStage)?.label}
-                </span>
-                ? This action will update the candidate's status in the hiring pipeline.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel onClick={handleCancelStageChange}>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={handleConfirmStageChange}>Confirm</AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+        <StatusUpdateForm
+          applicant={applicantData}
+          stages={stages}
+          users={allUsers}
+          isUpdating={isUpdating}
+          onUpdate={handleStatusUpdate}
+        />
 
         <div className="grid lg:grid-cols-2 gap-6">
-          <Card className="p-6">
-            <h3 className="text-lg font-semibold text-foreground mb-4">Professional Information</h3>
-            
-            <div className="space-y-3">
-              <div>
-                <p className="text-sm text-muted-foreground">Total Experience</p>
-                <p className="text-foreground font-medium">{total_experience || "N/A"}</p>
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Relevant Experience</p>
-                <p className="text-foreground font-medium">{relevant_experience || "N/A"}</p>
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Current CTC</p>
-                <p className="text-foreground font-medium">{current_ctc || "N/A"}</p>
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Expected CTC</p>
-                <p className="text-foreground font-medium">{expected_ctc || "N/A"}</p>
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Notice Period</p>
-                <p className="text-foreground font-medium">{notice_period || "N/A"}</p>
-              </div>
-            </div>
-
-            <h3 className="text-lg font-semibold text-foreground mt-6 mb-3">Skills</h3>
-            <div className="flex flex-wrap gap-2">
-              {skill_set ? skill_set.split(",").map((skill) => (
-                <Badge key={skill.trim()} variant="secondary">
-                  {skill.trim()}
-                </Badge>
-              )) : <p className="text-sm text-muted-foreground">No skills listed</p>}
-            </div>
-
-            {(linkedin || github) && (
-              <>
-                <h3 className="text-lg font-semibold text-foreground mt-6 mb-3">Links</h3>
-                <div className="space-y-2">
-                  {linkedin && (
-                    <a href={linkedin} target="_blank" rel="noopener noreferrer" 
-                       className="text-sm text-primary hover:underline block">
-                      LinkedIn Profile →
-                    </a>
-                  )}
-                  {github && (
-                    <a href={github} target="_blank" rel="noopener noreferrer"
-                       className="text-sm text-primary hover:underline block">
-                      GitHub Profile →
-                    </a>
-                  )}
-                </div>
-              </>
-            )}
-          </Card>
-
-          <Card className="p-6">
-            <h3 className="text-lg font-semibold text-foreground mb-4">Activity Timeline</h3>
-            <div className="space-y-4">
-              {mockTimeline.map((event, index) => (
-                <div key={event.id} className="flex gap-4">
-                  <div className="flex flex-col items-center">
-                    <div className="h-3 w-3 rounded-full bg-primary" />
-                    {index < mockTimeline.length - 1 && (
-                      <div className="w-0.5 h-full min-h-[40px] bg-border mt-2" />
-                    )}
-                  </div>
-                  <div className="flex-1 pb-4">
-                    <p className="font-medium text-foreground">{event.status_name}</p>
-                    {event.notes && (
-                      <p className="text-sm text-muted-foreground mt-1">{event.notes}</p>
-                    )}
-                    {event.assigned_user_name && (
-                      <p className="text-xs text-muted-foreground mt-1">
-                        Assigned to: {event.assigned_user_name}
-                      </p>
-                    )}
-                    <p className="text-xs text-muted-foreground mt-1">
-                      {formatDateTime(event.status_date)}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </Card>
+          <ProfessionalInfoCard applicant={applicantData} />
+          <ActivityTimeline statusHistory={status_history} />
         </div>
 
-        <Card className="p-6">
-          <h3 className="text-lg font-semibold text-foreground mb-4">Address</h3>
-          <div className="space-y-2">
-            {street && <p className="text-foreground">{street}</p>}
-            <p className="text-foreground">
-              {city}, {state} {zip_code}
-            </p>
-          </div>
-        </Card>
+        <AddressCard street={street} city={city} zipCode={zip_code} />
 
         <ResumeViewerModal
           isOpen={isResumeViewerOpen}
           onClose={() => setIsResumeViewerOpen(false)}
-          resumeUrl="/resume.pdf"
+          resumeUrl={resumeUrl}
           candidateName={`${first_name} ${last_name}`}
         />
       </div>
