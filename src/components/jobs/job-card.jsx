@@ -1,51 +1,98 @@
-import { Card } from "@/components/ui/card";
+import { Link, useLocation } from "react-router-dom";
+import { cn } from "@/lib/utils";
+import { 
+  Briefcase, 
+  Building2, 
+  Settings,
+  LogOut
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { MapPin, Briefcase } from "lucide-react";
-import { formatDate } from "@/utility/date-utils";
-export default function JobCard({ job, onViewDetails }) {
+import { useAuth } from "@/contexts/auth-context";
+import { USER_ROLES } from "@/constants/roles";
+
+const navigation = [
+  { 
+    name: "Jobs", 
+    href: "/dashboard/jobs", 
+    icon: Briefcase,
+    allowedRoles: [USER_ROLES.ADMINISTRATOR, USER_ROLES.RECRUITER]
+  },
+  { 
+    name: "Organization", 
+    href: "/dashboard/organization", 
+    icon: Building2,
+    allowedRoles: [USER_ROLES.ADMINISTRATOR]
+  },
+  { 
+    name: "Settings", 
+    href: "/dashboard/settings", 
+    icon: Settings,
+    allowedRoles: [USER_ROLES.ADMINISTRATOR]
+  },
+];
+
+export function DashboardLayout({ children }) {
+  const location = useLocation();
+  const { user } = useAuth();
+
+  // Filter navigation items based on user role
+  const filteredNavigationOnRole = navigation.filter(item => 
+    !item.allowedRoles || item.allowedRoles.includes(user?.role)
+  );
+
   return (
-    <Card className="p-6 hover:shadow-lg transition-all duration-200">
-      <div className="space-y-4">
-        <div>
-          <h3
-            className="text-xl font-semibold text-foreground hover:text-primary transition-colors cursor-pointer"
-            onClick={() => onViewDetails(job.id)}
-          >
-            {job.title}
-          </h3>
-          <p className="text-muted-foreground mt-1">{job.department}</p>
-        </div>
-
-        <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
-          <div className="flex items-center gap-1">
-            <MapPin className="h-4 w-4" />
-            <span>{job.location}</span>
+    <div className="min-h-screen bg-background">
+      {/* Sidebar */}
+      <aside className="fixed inset-y-0 left-0 z-50 w-64 bg-card border-r border-border">
+        <div className="flex h-full flex-col">
+          {/* Logo */}
+          <div className="flex h-16 items-center border-b border-border px-6">
+            <img 
+              src="/accipere-primary-black.png" 
+              alt="Accipere" 
+              className="h-7 w-auto"
+            />
           </div>
-          <div className="flex items-center gap-1">
-            <Briefcase className="h-4 w-4" />
-            <span>{job.employment_type}</span>
-          </div>
-          {(job.salary_min || job.salary_max) && (
-            <div className="flex items-center gap-1">
-              <span>
-                {job.salary_min && job.salary_max 
-                  ? `₹${job.salary_min} - ₹${job.salary_max}`
-                  : job.salary_min 
-                    ? `₹${job.salary_min}+`
-                    : `Up to ₹${job.salary_max}`
-                }
-              </span>
-            </div>
-          )}
-        </div>
 
-        <div className="flex items-center justify-between pt-2">
-          <span className="text-sm text-muted-foreground">
-            Posted - {formatDate(job.created_at)}
-          </span>
-          <Button onClick={() => onViewDetails(job.id)}>View Details</Button>
+          {/* Navigation */}
+          <nav className="flex-1 space-y-1 px-3 py-4">
+            {filteredNavigationOnRole.map((item) => {
+              const isActive = location.pathname === item.href || 
+                             location.pathname.startsWith(item.href + "/");
+              return (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className={cn(
+                    "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                    isActive
+                      ? "bg-primary text-primary-foreground"
+                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  )}
+                >
+                  <item.icon className="h-5 w-5" />
+                  {item.name}
+                </Link>
+              );
+            })}
+          </nav>
+
+          {/* User section */}
+          <div className="border-t border-border p-4">
+            <Button variant="ghost" className="w-full justify-start text-muted-foreground hover:text-foreground">
+              <LogOut className="h-5 w-5 mr-3" />
+              Logout
+            </Button>
+          </div>
         </div>
+      </aside>
+
+      {/* Main content */}
+      <div className="pl-64">
+        <main className="p-8">
+          {children}
+        </main>
       </div>
-    </Card>
+    </div>
   );
 }

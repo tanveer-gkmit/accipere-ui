@@ -82,7 +82,9 @@ export default function ApplyFormModal({ jobId, jobTitle, isOpen, onClose }) {
 
       if (err.response?.data) {
         setErrors(err.response.data);
-        toast.error("Please fix the errors in the form");
+        toast.error("Unable to submit application", {
+          description: "Please check the form and correct any highlighted errors.",
+        });
       } else {
         toast.error(err.message || "Failed to submit application");
       }
