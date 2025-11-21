@@ -1,16 +1,36 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import JobCard from "@/components/jobs/job-card";
 import JobDetailModal from "@/components/jobs/job-detail-modal";
 import ApplyFormModal from "@/components/jobs/apply-form-modal";
-import { mockJobs } from "@/data/mock-data";
+import { axiosInstance } from "@/api";
 
 export default function Jobs() {
+  const [jobs, setJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [selectedJob, setSelectedJob] = useState(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
 
+  useEffect(() => {
+    const fetchJobs = async () => {
+      try {
+        setLoading(true);
+        const response = await axiosInstance.get("/api/jobs/");
+        setJobs(response.data.results);
+      } catch (err) {
+        setError(err.message || "Failed to fetch jobs");
+        console.error("Error fetching jobs:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchJobs();
+  }, []);
+
   const handleViewDetails = (jobId) => {
-    const job = mockJobs.find(({ id }) => id === jobId);
+    const job = jobs.find((j) => j.id === jobId);
     if (job) {
       setSelectedJob(job);
       setIsDetailModalOpen(true);
@@ -50,23 +70,34 @@ export default function Jobs() {
                 Open Positions
               </h2>
               <p className="text-muted-foreground mt-2">
-                {mockJobs.length} jobs available
+                {loading ? "Loading..." : `${jobs.length} jobs available`}
               </p>
             </div>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-6">
-            {mockJobs.map((job) => {
-              const { id } = job;
-              return (
+          {loading && (
+            <p className="text-center text-muted-foreground py-8">Loading jobs...</p>
+          )}
+
+          {error && (
+            <p className="text-center text-red-500 py-8">Error: {error}</p>
+          )}
+
+          {!loading && !error && jobs.length === 0 && (
+            <p className="text-center text-muted-foreground py-8">No jobs available at the moment</p>
+          )}
+
+          {!loading && !error && jobs.length > 0 && (
+            <div className="grid md:grid-cols-2 gap-6">
+              {jobs.map((job) => (
                 <JobCard
-                  key={id}
+                  key={job.id}
                   job={job}
                   onViewDetails={handleViewDetails}
                 />
-              );
-            })}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
@@ -78,6 +109,7 @@ export default function Jobs() {
         onApply={handleApply}
       />
       <ApplyFormModal
+        jobId={selectedJob?.id || ""}
         jobTitle={selectedJob?.title || ""}
         isOpen={isApplyModalOpen}
         onClose={() => setIsApplyModalOpen(false)}

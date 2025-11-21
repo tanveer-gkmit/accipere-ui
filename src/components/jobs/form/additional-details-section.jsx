@@ -2,27 +2,18 @@ import FormSection from "./form-section";
 import FormField from "./form-field";
 import TextAreaField from "./text-area-field";
 
-export default function AdditionalDetailsSection({ formData, setFormData }) {
+export default function AdditionalDetailsSection({ formData, setFormData, errors = {} }) {
   return (
     <FormSection title="Additional Details">
       <div className="space-y-4">
         <FormField
-          id="currentJobTitle"
+          id="current_job_title"
           label="Current Job Title"
-          value={formData.currentJobTitle}
+          value={formData.current_job_title}
           onChange={(e) =>
-            setFormData({ ...formData, currentJobTitle: e.target.value })
+            setFormData({ ...formData, current_job_title: e.target.value })
           }
           placeholder="e.g., Senior Developer"
-        />
-        <TextAreaField
-          id="skillSet"
-          label="Skill Set"
-          value={formData.skillSet}
-          onChange={(e) =>
-            setFormData({ ...formData, skillSet: e.target.value })
-          }
-          placeholder="List your skills (e.g., React, Node.js, Python)"
         />
       </div>
     </FormSection>

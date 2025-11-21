@@ -154,3 +154,8 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Toast description styles */
+[data-sonner-toast] [data-description] {
+  color: oklch(0.145 0 0) !important;
+}

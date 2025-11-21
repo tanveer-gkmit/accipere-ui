@@ -1,7 +1,7 @@
 import FormSection from "./form-section";
 import FormField from "./form-field";
 
-export default function SocialLinksSection({ formData, setFormData }) {
+export default function SocialLinksSection({ formData, setFormData, errors = {} }) {
   return (
     <FormSection title="Social Links">
       <div className="grid md:grid-cols-2 gap-4">

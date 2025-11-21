@@ -1,6 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { MapPin, Briefcase } from "lucide-react";
+import { formatSalaryRange } from "@/utility/salary-utils";
 
 export default function JobCard({ job, onViewDetails }) {
   return (
@@ -25,13 +26,11 @@ export default function JobCard({ job, onViewDetails }) {
             <Briefcase className="h-4 w-4" />
             <span>{job.employment_type}</span>
           </div>
-          <div className="flex items-center gap-1">
-            <span>
-              {job.salary_min && job.salary_max 
-                ? `₹${job.salary_min}L - ₹${job.salary_max}L`
-                : 'Salary not specified'}
-            </span>
-          </div>
+          {(job.salary_min || job.salary_max) && (
+            <div className="flex items-center gap-1">
+              <span>{formatSalaryRange(job.salary_min, job.salary_max)}</span>
+            </div>
+          )}
         </div>
 
         <div className="flex items-center justify-between pt-2">
