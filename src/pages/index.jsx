@@ -18,7 +18,6 @@ export default function Jobs() {
         setLoading(true);
         const response = await axiosInstance.get("/api/jobs/");
         setJobs(response.data.results);
-        setError(null);
       } catch (err) {
         setError(err.message || "Failed to fetch jobs");
         console.error("Error fetching jobs:", err);

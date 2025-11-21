@@ -17,7 +17,7 @@ const usersService = {
         password,
         password_confirm,
       });
-      return { data: response.data, error: null };
+      return { data: response.data};
     } catch (error) {
       return {
         data: null,
@@ -82,6 +82,8 @@ export default function SetPassword() {
     }
   };
 
+  const isDisabled = loading || !token;
+
   if (success) {
     return (
       <div className="min-h-screen flex items-center justify-center p-4">
@@ -129,7 +131,7 @@ export default function SetPassword() {
                   setFormData({ ...formData, password: e.target.value })
                 }
                 placeholder="Enter your password"
-                disabled={loading || !token}
+                disabled={isDisabled}
                 minLength={8}
               />
               <p className="text-xs text-muted-foreground">
@@ -144,11 +146,11 @@ export default function SetPassword() {
                 type="password"
                 required
                 value={formData.password_confirm}
-                onChange={(e) =>
-                  setFormData({ ...formData, password_confirm: e.target.value })
+                onChange={({target}) =>
+                  setFormData({ ...formData, password_confirm: target.value })
                 }
                 placeholder="Confirm your password"
-                disabled={loading || !token}
+                disabled={isDisabled}
                 minLength={8}
               />
             </div>
@@ -156,7 +158,7 @@ export default function SetPassword() {
             <Button
               type="submit"
               className="w-full"
-              disabled={loading || !token}
+              disabled={isDisabled}
             >
               {loading ? (
                 <>

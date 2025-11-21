@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
 import { DashboardLayout } from "@/components/layout/dashboard-layout";
+import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Loader2 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Mail, Phone, MapPin, Calendar, FileText, ArrowLeft, Download, Loader2 } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import ResumeViewerModal from "@/components/jobs/resume-viewer-modal";
 import { useToast } from "@/hooks/use-toast";

@@ -141,12 +141,12 @@ export default function JobApplicants() {
                         <div className="space-y-1">
                           <h3 className="text-lg font-semibold text-foreground">{full_name}</h3>
                           <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <Mail className="h-4 w-4 flex-shrink-0" />
+                            <Mail className="h-4 w-4 shrink-0" />
                             <span>{email}</span>
                           </div>
                           {phone_no && (
                             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                              <Phone className="h-4 w-4 flex-shrink-0" />
+                              <Phone className="h-4 w-4 shrink-0" />
                               <span>{phone_no}</span>
                             </div>
                           )}
