@@ -1,8 +1,10 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { ROUTES } from "@/constants/routes";
 
 export default function NotFound() {
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 p-4">
@@ -23,17 +25,17 @@ export default function NotFound() {
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
             <Button
-              asChild
+              onClick={() => navigate(-1)}
               variant="outline"
               className="w-full sm:w-auto"
             >
-              <Link to="/">Go Back</Link>
+              Go Back
             </Button>
             <Button
-              asChild
+              onClick={() => navigate(ROUTES.HOME)}
               className="w-full sm:w-auto"
             >
-              <Link to="/">Go Home</Link>
+              Go Home
             </Button>
           </div>
         </CardContent>

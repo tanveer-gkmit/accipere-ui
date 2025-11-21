@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { ROUTES } from '@/constants/routes';
 
 const UnauthorizedPage = () => {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ const UnauthorizedPage = () => {
           <Button onClick={() => navigate(-1)} variant="outline">
             Go Back
           </Button>
-          <Button onClick={() => navigate('/')}>
+          <Button onClick={() => navigate(ROUTES.HOME)}>
             Go to Home
           </Button>
         </div>

@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
 import { validatePassword } from "@/utility/validation";
 import axiosInstance from "@/api/axios";
+import { ROUTES } from "@/constants/routes";
 
 // Users Service - Set Password
 const usersService = {
@@ -93,7 +94,7 @@ export default function SetPassword() {
             <p className="text-muted-foreground">
               Your password has been set successfully.
             </p>
-            <Button onClick={() => navigate("/login")} className="w-full">
+            <Button onClick={() => navigate(ROUTES.LOGIN)} className="w-full">
               Go to Login
             </Button>
           </div>
@@ -174,7 +175,7 @@ export default function SetPassword() {
           <div className="text-center">
             <Button
               variant="link"
-              onClick={() => navigate("/login")}
+              onClick={() => navigate(ROUTES.LOGIN)}
             >
               Back to Login
             </Button>

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { DashboardLayout } from "@/components/layout/dashboard-layout";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Loader2 } from "lucide-react";
-import { Link, useParams } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import ResumeViewerModal from "@/components/jobs/resume-viewer-modal";
 import { useToast } from "@/hooks/use-toast";
 import { useResume } from "@/hooks/use-resume";
@@ -13,9 +13,11 @@ import { StatusUpdateForm } from "@/components/applicant/status-update-form";
 import { ProfessionalInfoCard } from "@/components/applicant/professional-info-card";
 import { ActivityTimeline } from "@/components/applicant/activity-timeline";
 import { AddressCard } from "@/components/applicant/address-card";
+import { ROUTES } from "@/constants/routes";
 
 export default function ApplicantDetail() {
   const { applicantId } = useParams();
+  const navigate = useNavigate();
   const { toast } = useToast();
   const { resumeUrl, fetchResume, downloadResume, cleanup } = useResume();
   const { applicantData, loading, error, stages, allUsers, setApplicantData } = useApplicantData(applicantId);
@@ -74,7 +76,7 @@ export default function ApplicantDetail() {
             {error || "Applicant not found"}
           </p>
           <Button asChild>
-            <Link to="/dashboard/jobs">Back to Jobs</Link>
+            <Link to={ROUTES.DASHBOARD}>Back to Dashboard</Link>
           </Button>
         </div>
       </DashboardLayout>
@@ -87,10 +89,8 @@ export default function ApplicantDetail() {
     <DashboardLayout>
       <div className="space-y-6 max-w-6xl">
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" asChild>
-            <Link to={`/dashboard/jobs/${job_details?.id}/applicants`}>
-              <ArrowLeft className="h-5 w-5" />
-            </Link>
+          <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
+            <ArrowLeft className="h-5 w-5" />
           </Button>
           <div className="flex-1">
             <h1 className="text-3xl font-bold text-foreground">Applicant Details</h1>

@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { authService } from "@/api/auth";
 import { validateEmail, validatePassword } from "@/utility/validation";
 import { useAuth } from "@/contexts/auth-context";
+import { ROUTES } from "@/constants/routes";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -38,7 +39,7 @@ export default function Login() {
     if (response?.access) {
       // Fetch user data before navigating
       await refetchUser();
-      navigate("/dashboard/jobs");
+      navigate(ROUTES.DASHBOARD);
     } else {
       // Handle error response
       const generalError = response?.non_field_errors?.[0] 
