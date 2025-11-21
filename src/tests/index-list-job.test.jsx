@@ -2,6 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import Jobs from '../pages/index';
 import { axiosInstance } from '../api';
+import { mockPublicJobsResponse } from '../constants/test-data';
 
 /**
  * Test Suite: Public Job Listing Page
@@ -28,35 +29,6 @@ describe('Index Page - Public Job Listing', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
-
-  const mockPublicJobsResponse = {
-    results: [
-      {
-        id: 1,
-        title: 'Senior Frontend Developer',
-        department: 'Engineering',
-        location: 'Remote',
-        employment_type: 'Full-time',
-        experience_level: 'Senior',
-        status: 'Open',
-        description: 'We are looking for a senior frontend developer',
-        requirements: '5+ years of React experience',
-        created_at: '2025-11-01T00:00:00Z',
-      },
-      {
-        id: 2,
-        title: 'Product Designer',
-        department: 'Design',
-        location: 'San Francisco, CA',
-        employment_type: 'Full-time',
-        experience_level: 'Mid',
-        status: 'Open',
-        description: 'Join our design team',
-        requirements: '3+ years of design experience',
-        created_at: '2025-11-05T00:00:00Z',
-      },
-    ],
-  };
 
   it('fetches and displays public job listings on page load', async () => {
     axiosInstance.get.mockResolvedValueOnce({ data: mockPublicJobsResponse });
