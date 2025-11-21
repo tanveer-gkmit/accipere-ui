@@ -4,30 +4,12 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { ArrowRight, Layers, Settings2, Loader2 } from "lucide-react";
-import axiosInstance from "@/api/axios";
-import { ROUTES } from "@/constants/routes";
+import { useStages } from "@/hooks/use-stages";
 
 export default function Settings() {
-  const [stages, setStages] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { stages, loading, fetchStages } = useStages();
 
   useEffect(() => {
-    const fetchStages = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const response = await axiosInstance.get("/api/application-statuses/");
-        // API returns paginated response with results array
-        setStages(response.data.results || []);
-      } catch (err) {
-        console.error("Error fetching stages:", err);
-        setError(err.response?.data?.message || "Failed to load stages");
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchStages();
   }, []);
 
@@ -69,20 +51,20 @@ export default function Settings() {
                 <h3 className="text-lg font-semibold text-foreground mb-2">Current Stage Configuration</h3>
                 <p className="text-sm text-muted-foreground mb-4">Your active hiring pipeline stages:</p>
                 
-                {loading ? (
+                {loading && (
                   <div className="flex items-center justify-center py-8">
                     <Loader2 className="h-6 w-6 animate-spin text-primary" />
                     <span className="ml-2 text-muted-foreground">Loading stages...</span>
                   </div>
-                ) : error ? (
-                  <div className="p-4 rounded-lg bg-destructive/10 text-destructive">
-                    {error}
-                  </div>
-                ) : stages.length === 0 ? (
+                )}
+                
+                {!loading && stages.length === 0 && (
                   <div className="p-4 rounded-lg bg-muted/30 text-muted-foreground">
                     No stages configured yet. Click "Configure Stage" to add stages.
                   </div>
-                ) : (
+                )}
+                
+                {!loading && stages.length > 0 && (
                   <div className="space-y-2">
                     {stages.map((stage) => (
                       <div key={stage.id} className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">

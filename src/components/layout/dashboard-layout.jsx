@@ -48,7 +48,7 @@ export function DashboardLayout({ children }) {
   const { user, logout } = useAuth();
 
   // Filter navigation items based on user role
-  const filteredNavigation = navigation.filter(item => 
+  const filteredNavigationOnRole = navigation.filter(item => 
     !item.allowedRoles || item.allowedRoles.includes(user?.role)
   );
 
@@ -80,7 +80,7 @@ export function DashboardLayout({ children }) {
 
           {/* Navigation */}
           <nav className="flex-1 space-y-1 px-3 py-4">
-            {filteredNavigation.map((item) => {
+            {filteredNavigationOnRole.map((item) => {
               const isActive = item.href === ROUTES.DASHBOARD 
                 ? location.pathname === ROUTES.DASHBOARD
                 : location.pathname === item.href || location.pathname.startsWith(item.href + "/");

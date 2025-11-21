@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import axiosInstance from '@/api/axios';
 import { USER_ROLES } from '@/constants/roles';
+import { useToast } from '@/hooks/use-toast';
 
 const AuthContext = createContext(null);
 
@@ -9,6 +10,7 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { toast } = useToast();
 
   // Function to fetch user data
   const fetchUser = async () => {
@@ -20,6 +22,11 @@ export const AuthProvider = ({ children }) => {
       } catch (error) {
         localStorage.removeItem('access_token');
         setUser(null);
+        toast({
+          title: 'Session Expired',
+          description: 'Your session has expired. Please log in again.',
+          variant: 'destructive',
+        });
       }
     }
   };

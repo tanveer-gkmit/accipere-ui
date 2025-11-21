@@ -8,7 +8,7 @@ export function ActivityTimeline({ statusHistory }) {
         Activity Timeline
       </h3>
       <div className="space-y-4">
-        {statusHistory && statusHistory.length > 0 ? (
+        {statusHistory?.length ? (
           statusHistory.map((event, index) => (
             <div key={event.id} className="flex gap-4">
               <div className="flex flex-col items-center">

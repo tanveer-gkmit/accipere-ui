@@ -7,6 +7,7 @@ import JobCreate from '../pages/dashboard/job-create';
 import JobEdit from '../pages/dashboard/job-edit';
 import JobOpeningList from '../pages/dashboard/job-opening-list';
 import { axiosInstance } from '../api';
+import { mockJobData, mockJobsResponse } from '../constants/test-data';
 
 // Mock axios
 vi.mock('../api', () => ({
@@ -173,18 +174,6 @@ describe('JobEdit Component', () => {
     vi.clearAllMocks();
   });
 
-  const mockJobData = {
-    id: 123,
-    title: 'Senior Developer',
-    department: 'Engineering',
-    location: 'Remote',
-    employment_type: 'Full-time',
-    experience_level: 'Senior',
-    description: 'Great opportunity',
-    requirements: '5+ years',
-    status: 'Open',
-  };
-
   it('fetches and displays job data', async () => {
     axiosInstance.get.mockResolvedValueOnce({ data: mockJobData });
 
@@ -242,31 +231,6 @@ describe('JobOpeningList Component', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
-
-  const mockJobsResponse = {
-    results: [
-      {
-        id: 1,
-        title: 'Frontend Developer',
-        department: 'Engineering',
-        location: 'Remote',
-        employment_type: 'Full-time',
-        experience_level: 'Mid',
-        status: 'Open',
-        created_at: '2025-11-01T00:00:00Z',
-      },
-      {
-        id: 2,
-        title: 'Backend Developer',
-        department: 'Engineering',
-        location: 'San Francisco',
-        employment_type: 'Full-time',
-        experience_level: 'Senior',
-        status: 'Closed',
-        created_at: '2025-11-10T00:00:00Z',
-      },
-    ],
-  };
 
   it('fetches and displays jobs list', async () => {
     axiosInstance.get.mockResolvedValueOnce({ data: mockJobsResponse });

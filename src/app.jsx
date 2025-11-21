@@ -21,6 +21,7 @@ import StageConfig from "@/pages/dashboard/stage-config";
 import UnauthorizedPage from "@/pages/unauthorized";
 import NotFound from "@/pages/not-found";
 import { UserRound } from "lucide-react";
+import { Navigate } from "react-router-dom";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
       <BrowserRouter>
         <AuthProvider>
           <Routes>
+             <Route path="/index.html" element={<Navigate to="/" replace />} />
             <Route
               path={ROUTES.LOGIN}
               element={
