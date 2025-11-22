@@ -26,7 +26,7 @@ export default function JobOpeningList() {
         setJobs(response.data.results);
         setError(null);
       } catch (err) {
-        setError(err.message || "Failed to fetch jobs");
+        setError(err.detail || "Failed to fetch jobs");
         console.error("Error fetching jobs:", err);
       } finally {
         setLoading(false);

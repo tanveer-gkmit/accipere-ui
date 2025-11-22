@@ -18,7 +18,7 @@ export const usersService = {
       return { data: response.data };
     } catch (error) {
       return {
-        error: error.response?.data || "Failed to create user",
+        error: error.response?.data.error || "Failed to create user",
       };
     }
   },
@@ -29,7 +29,7 @@ export const usersService = {
       return { data: response.data };
     } catch (error) {
       return {
-        error: error.response?.data || "Failed to update user",
+        error: error.response?.data.error || "Failed to update user",
       };
     }
   },
@@ -40,7 +40,8 @@ export const usersService = {
       return { data: response.data };
     } catch (error) {
       return {
-        error: error.response?.data?.detail || "Failed to delete user",
+        
+        error: error.response?.data?.error || "Failed to delete user",
       };
     }
   },

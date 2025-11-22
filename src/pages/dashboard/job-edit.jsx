@@ -14,6 +14,7 @@ export default function JobEdit() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [submitting, setSubmitting] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState({});
 
   useEffect(() => {
     const fetchJob = async () => {
@@ -37,6 +38,7 @@ export default function JobEdit() {
     try {
       setSubmitting(true);
       setError(null);
+      setFieldErrors({});
 
       // Prepare job data with required fields
       const jobUpdateData = {
@@ -60,7 +62,21 @@ export default function JobEdit() {
       navigate(ROUTES.DASHBOARD_JOBS);
     } catch (err) {
       console.error("Error updating job:", err);
-      setError(err.response?.data?.detail || err.message || "Failed to update job");
+      
+      // Check if error response has field-specific errors
+      if (err.response?.data && typeof err.response.data === 'object') {
+        const errorData = err.response.data;
+        
+        // If there are field-specific errors, set them
+        if (!errorData.detail && Object.keys(errorData).length > 0) {
+          setFieldErrors(errorData);
+        } else {
+          // Otherwise show general error
+          setError(errorData.detail || err.message || "Failed to update job");
+        }
+      } else {
+        setError(err.message || "Failed to update job");
+      }
     } finally {
       setSubmitting(false);
     }
@@ -121,6 +137,7 @@ export default function JobEdit() {
             onSubmit={handleSubmit}
             onCancel={handleCancel}
             loading={submitting}
+            serverErrors={fieldErrors}
           />
         )}
       </div>
