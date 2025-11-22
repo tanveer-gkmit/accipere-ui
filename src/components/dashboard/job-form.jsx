@@ -11,7 +11,8 @@ export function JobForm({
   isEditMode = false,
   onSubmit,
   onCancel,
-  loading = false
+  loading = false,
+  serverErrors = {}
 }) {
   const defaultFormData = {
     title: "",
@@ -32,12 +33,38 @@ export function JobForm({
     ...initialData,
   });
 
+  const [validationErrors, setValidationErrors] = useState({});
+
   const handleChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+    // Clear validation error when field is updated
+    if (validationErrors[field]) {
+      setValidationErrors(prev => ({ ...prev, [field]: false }));
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    
+    // Validate required select fields and show errors
+    const newErrors = {};
+    if (!formData.employment_type) newErrors.employment_type = true;
+    if (!formData.experience_level) newErrors.experience_level = true;
+    if (!formData.status) newErrors.status = true;
+    
+    if (Object.keys(newErrors).length > 0) {
+      setValidationErrors(newErrors);
+      // Focus on first empty required select
+      if (!formData.employment_type) {
+        document.getElementById('type')?.focus();
+      } else if (!formData.experience_level) {
+        document.getElementById('experience')?.focus();
+      } else if (!formData.status) {
+        document.getElementById('status')?.focus();
+      }
+      return;
+    }
+    
     if (onSubmit) {
       onSubmit(formData);
     }
@@ -56,9 +83,12 @@ export function JobForm({
               value={formData.title}
               onChange={(e) => handleChange("title", e.target.value)}
               placeholder="e.g., Senior Frontend Developer"
-              className="h-11"
+              className={`h-11 ${serverErrors.title ? "border-red-500" : ""}`}
               required
             />
+            {serverErrors.title && (
+              <p className="text-sm text-red-500">{Array.isArray(serverErrors.title) ? serverErrors.title[0] : serverErrors.title}</p>
+            )}
           </div>
 
           <div className="grid md:grid-cols-2 gap-4">
@@ -69,9 +99,12 @@ export function JobForm({
                 value={formData.department}
                 onChange={(e) => handleChange("department", e.target.value)}
                 placeholder="e.g., Engineering, Marketing, Sales"
-                className="h-11"
+                className={`h-11 ${serverErrors.department ? "border-red-500" : ""}`}
                 required
               />
+              {serverErrors.department && (
+                <p className="text-sm text-red-500">{Array.isArray(serverErrors.department) ? serverErrors.department[0] : serverErrors.department}</p>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -81,17 +114,20 @@ export function JobForm({
                 value={formData.location}
                 onChange={(e) => handleChange("location", e.target.value)}
                 placeholder="e.g., San Francisco, CA or Remote"
-                className="h-11"
+                className={`h-11 ${serverErrors.location ? "border-red-500" : ""}`}
                 required
               />
+              {serverErrors.location && (
+                <p className="text-sm text-red-500">{Array.isArray(serverErrors.location) ? serverErrors.location[0] : serverErrors.location}</p>
+              )}
             </div>
           </div>
 
           <div className="grid md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="type">Employment Type *</Label>
-              <Select value={formData.employment_type} onValueChange={(value) => handleChange("employment_type", value)} required>
-                <SelectTrigger className="h-11">
+              <Select value={formData.employment_type} onValueChange={(value) => handleChange("employment_type", value)}>
+                <SelectTrigger id="type" className={`h-11 ${validationErrors.employment_type || serverErrors.employment_type ? "border-red-500" : ""}`}>
                   <SelectValue placeholder="Select type" />
                 </SelectTrigger>
                 <SelectContent>
@@ -101,12 +137,18 @@ export function JobForm({
                   <SelectItem value="Internship">Internship</SelectItem>
                 </SelectContent>
               </Select>
+              {validationErrors.employment_type && (
+                <p className="text-sm text-red-500">Please select an employment type</p>
+              )}
+              {serverErrors.employment_type && (
+                <p className="text-sm text-red-500">{Array.isArray(serverErrors.employment_type) ? serverErrors.employment_type[0] : serverErrors.employment_type}</p>
+              )}
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="experience">Experience Level *</Label>
-              <Select value={formData.experience_level} onValueChange={(value) => handleChange("experience_level", value)} required>
-                <SelectTrigger className="h-11">
+              <Select value={formData.experience_level} onValueChange={(value) => handleChange("experience_level", value)}>
+                <SelectTrigger id="experience" className={`h-11 ${validationErrors.experience_level || serverErrors.experience_level ? "border-red-500" : ""}`}>
                   <SelectValue placeholder="Select level" />
                 </SelectTrigger>
                 <SelectContent>
@@ -116,6 +158,12 @@ export function JobForm({
                   <SelectItem value="Lead">Lead</SelectItem>
                 </SelectContent>
               </Select>
+              {validationErrors.experience_level && (
+                <p className="text-sm text-red-500">Please select an experience level</p>
+              )}
+              {serverErrors.experience_level && (
+                <p className="text-sm text-red-500">{Array.isArray(serverErrors.experience_level) ? serverErrors.experience_level[0] : serverErrors.experience_level}</p>
+              )}
             </div>
           </div>
 
@@ -128,8 +176,11 @@ export function JobForm({
                 value={formData.salary_min}
                 onChange={(e) => handleChange("salary_min", e.target.value)}
                 placeholder="50000"
-                className="h-11"
+                className={`h-11 ${serverErrors.salary_min ? "border-red-500" : ""}`}
               />
+              {serverErrors.salary_min && (
+                <p className="text-sm text-red-500">{Array.isArray(serverErrors.salary_min) ? serverErrors.salary_min[0] : serverErrors.salary_min}</p>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -140,15 +191,18 @@ export function JobForm({
                 value={formData.salary_max}
                 onChange={(e) => handleChange("salary_max", e.target.value)}
                 placeholder="80000"
-                className="h-11"
+                className={`h-11 ${serverErrors.salary_max ? "border-red-500" : ""}`}
               />
+              {serverErrors.salary_max && (
+                <p className="text-sm text-red-500">{Array.isArray(serverErrors.salary_max) ? serverErrors.salary_max[0] : serverErrors.salary_max}</p>
+              )}
             </div>
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="status">Status *</Label>
-            <Select value={formData.status} onValueChange={(value) => handleChange("status", value)} required>
-              <SelectTrigger className="h-11">
+            <Select value={formData.status} onValueChange={(value) => handleChange("status", value)}>
+              <SelectTrigger id="status" className={`h-11 ${validationErrors.status || serverErrors.status ? "border-red-500" : ""}`}>
                 <SelectValue placeholder="Select status" />
               </SelectTrigger>
               <SelectContent>
@@ -156,6 +210,12 @@ export function JobForm({
                 <SelectItem value="Closed">Closed</SelectItem>
               </SelectContent>
             </Select>
+            {validationErrors.status && (
+              <p className="text-sm text-red-500">Please select a status</p>
+            )}
+            {serverErrors.status && (
+              <p className="text-sm text-red-500">{Array.isArray(serverErrors.status) ? serverErrors.status[0] : serverErrors.status}</p>
+            )}
           </div>
         </div>
 
@@ -169,9 +229,12 @@ export function JobForm({
               value={formData.description}
               onChange={(e) => handleChange("description", e.target.value)}
               placeholder="Describe the role, responsibilities, and what makes this position exciting..."
-              className="min-h-[150px]"
+              className={`min-h-[150px] ${serverErrors.description ? "border-red-500" : ""}`}
               required
             />
+            {serverErrors.description && (
+              <p className="text-sm text-red-500">{Array.isArray(serverErrors.description) ? serverErrors.description[0] : serverErrors.description}</p>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -181,9 +244,12 @@ export function JobForm({
               value={formData.requirements}
               onChange={(e) => handleChange("requirements", e.target.value)}
               placeholder="List the required skills, experience, and qualifications..."
-              className="min-h-[120px]"
+              className={`min-h-[120px] ${serverErrors.requirements ? "border-red-500" : ""}`}
               required
             />
+            {serverErrors.requirements && (
+              <p className="text-sm text-red-500">{Array.isArray(serverErrors.requirements) ? serverErrors.requirements[0] : serverErrors.requirements}</p>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -193,8 +259,11 @@ export function JobForm({
               value={formData.benefits}
               onChange={(e) => handleChange("benefits", e.target.value)}
               placeholder="List the benefits, perks, and what makes your company a great place to work..."
-              className="min-h-[100px]"
+              className={`min-h-[100px] ${serverErrors.benefits ? "border-red-500" : ""}`}
             />
+            {serverErrors.benefits && (
+              <p className="text-sm text-red-500">{Array.isArray(serverErrors.benefits) ? serverErrors.benefits[0] : serverErrors.benefits}</p>
+            )}
           </div>
         </div>
 

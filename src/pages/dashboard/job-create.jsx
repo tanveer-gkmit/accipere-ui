@@ -11,11 +11,13 @@ export default function JobCreate() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [fieldErrors, setFieldErrors] = useState({});
 
   const handleSubmit = async (formData) => {
     try {
       setLoading(true);
       setError(null);
+      setFieldErrors({});
 
       // Prepare job data with required fields
       const jobData = {
@@ -39,7 +41,21 @@ export default function JobCreate() {
       navigate(ROUTES.DASHBOARD_JOBS);
     } catch (err) {
       console.error("Error creating job:", err);
-      setError(err.response?.data?.detail || err.message || "Failed to create job");
+      
+      // Check if error response has field-specific errors
+      if (err.response?.data && typeof err.response.data === 'object') {
+        const errorData = err.response.data;
+        
+        // If there are field-specific errors, set them
+        if (!errorData.detail && Object.keys(errorData).length > 0) {
+          setFieldErrors(errorData);
+        } else {
+          // Otherwise show general error
+          setError(errorData.detail || err.message || "Failed to create job");
+        }
+      } else {
+        setError(err.message || "Failed to create job");
+      }
     } finally {
       setLoading(false);
     }
@@ -70,7 +86,7 @@ export default function JobCreate() {
           </div>
         )}
 
-        <JobForm onSubmit={handleSubmit} onCancel={handleCancel} loading={loading} />
+        <JobForm onSubmit={handleSubmit} onCancel={handleCancel} loading={loading} serverErrors={fieldErrors} />
       </div>
     </DashboardLayout>
   );
